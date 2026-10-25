@@ -106,15 +106,27 @@
           </div>
         </div>
 
-        <div>
-          <label class="text-[10px] text-slate-400 ml-1">ভাড়া দেওয়া মালামালের বিবরণ</label>
-          <textarea id="itemsList" rows="2" placeholder="যেমন: চেয়ার ১০০টি, টেবিল ১০টি, গেট ১টি, সাউন্ড সিস্টেম..." required class="w-full glass-input text-white p-2.5 rounded-xl text-xs outline-none resize-none"></textarea>
+        <!-- Dynamic Items Dropdown Section -->
+        <div class="bg-slate-900/50 p-3 rounded-2xl border border-white/5 space-y-2.5">
+          <div class="flex justify-between items-center">
+            <label class="text-[11px] font-semibold text-sky-300 flex items-center gap-1">
+              <i class="fa-solid fa-boxes-stacked"></i> মালামালের তালিকা, সংখ্যা ও দাম
+            </label>
+            <button type="button" id="addItemBtn" class="text-[11px] text-sky-400 hover:text-sky-300 bg-sky-500/10 px-2.5 py-1 rounded-lg border border-sky-500/20 font-medium transition flex items-center gap-1">
+              <i class="fa-solid fa-plus text-[10px]"></i> আইটেম যোগ করুন
+            </button>
+          </div>
+
+          <div id="itemsContainer" class="space-y-2">
+            <!-- Dynamic rows will appear here -->
+          </div>
         </div>
 
-        <div class="grid grid-cols-3 gap-2">
+        <!-- Calculation Row -->
+        <div class="grid grid-cols-3 gap-2 pt-1">
           <div>
             <label class="text-[10px] text-slate-400 ml-1">মোট বিল (৳)</label>
-            <input type="number" id="totalAmount" placeholder="0" min="0" required class="w-full glass-input text-white px-3 py-2 rounded-xl text-xs outline-none font-semibold">
+            <input type="number" id="totalAmount" placeholder="0" readonly class="w-full glass-input text-sky-300 bg-slate-900/80 px-3 py-2 rounded-xl text-xs outline-none font-bold">
           </div>
           <div>
             <label class="text-[10px] text-emerald-400 ml-1">জমা / অগ্রিম (৳)</label>
@@ -126,12 +138,12 @@
           </div>
         </div>
 
-        <div class="flex items-center justify-between pt-1">
+        <div class="flex items-center justify-between pt-2">
           <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
             <input type="checkbox" id="returnStatus" class="rounded text-sky-500 focus:ring-0">
             <span>মালামাল ফেরত এসেছে</span>
           </label>
-          <button type="submit" id="submitBtn" class="bg-gradient-to-r from-sky-500 to-indigo-600 hover:opacity-95 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-md shadow-sky-600/30 transition flex items-center gap-1.5 active:scale-95">
+          <button type="submit" id="submitBtn" class="bg-gradient-to-r from-sky-500 to-indigo-600 hover:opacity-95 text-white px-5 py-2 rounded-xl text-xs font-semibold shadow-md shadow-sky-600/30 transition flex items-center gap-1.5 active:scale-95">
             <i class="fa-solid fa-floppy-disk"></i> <span id="submitBtnText">সংরক্ষণ করুন</span>
           </button>
         </div>
@@ -177,6 +189,457 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, collection, addDoc, updateDoc, query, where, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCJXc8miGg_6bAZCb_SpYfGelwzxhA3bpw",
+      authDomain: "apu-s-notes.firebaseapp.com",
+      projectId: "apu-s-notes",
+      storageBucket: "apu-s-notes.firebasestorage.app",
+      messagingSenderId: "469045356302",
+      appId: "1:469045356302:web:9db39c7df9564ca4c1995f",
+      measurementId: "G-T6ELLRKVM4"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    let currentUser = null;
+    let allOrders = [];
+
+    // আপনার দেওয়া নির্দিষ্ট মালামালের তালিকা
+    const defaultItemsList = [
+      "চেয়ার",
+      "টেবিল",
+      "বড় চামচ",
+      "ছোট চামচ",
+      "সামিয়ানা",
+      "প্লেট",
+      "বালতি",
+      "বাতি",
+      "কুন্তি",
+      "ডেসকি",
+      "গামলা",
+      "জগ",
+      "মগ",
+      "অন্যান্য"
+    ];
+
+    const loginBtn = document.getElementById("loginBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
+    const userSection = document.getElementById("userSection");
+    const userName = document.getElementById("userName");
+    const appContent = document.getElementById("appContent");
+    const loggedOutView = document.getElementById("loggedOutView");
+
+    const orderForm = document.getElementById("orderForm");
+    const editOrderId = document.getElementById("editOrderId");
+    const custName = document.getElementById("custName");
+    const custPhone = document.getElementById("custPhone");
+    const eventDate = document.getElementById("eventDate");
+    const eventAddress = document.getElementById("eventAddress");
+    const itemsContainer = document.getElementById("itemsContainer");
+    const addItemBtn = document.getElementById("addItemBtn");
+
+    const totalAmount = document.getElementById("totalAmount");
+    const paidAmount = document.getElementById("paidAmount");
+    const dueAmount = document.getElementById("dueAmount");
+    const returnStatus = document.getElementById("returnStatus");
+    const cancelEditBtn = document.getElementById("cancelEditBtn");
+    const submitBtnText = document.getElementById("submitBtnText");
+    const formTitle = document.getElementById("formTitle");
+
+    const ordersList = document.getElementById("ordersList");
+    const searchInput = document.getElementById("searchInput");
+    const filterStatus = document.getElementById("filterStatus");
+
+    const statTotalOrders = document.getElementById("statTotalOrders");
+    const statTotalPaid = document.getElementById("statTotalPaid");
+    const statTotalDue = document.getElementById("statTotalDue");
+    const toast = document.getElementById("toast");
+    const toastMsg = document.getElementById("toastMsg");
+
+    loginBtn.onclick = () => signInWithPopup(auth, provider).catch(err => alert("Login Error: " + err.message));
+    logoutBtn.onclick = () => signOut(auth);
+
+    onAuthStateChanged(auth, (user) => {
+      currentUser = user;
+      if (user) {
+        userSection.classList.remove("hidden");
+        loginBtn.classList.add("hidden");
+        appContent.classList.remove("hidden");
+        loggedOutView.classList.add("hidden");
+        userName.innerText = user.displayName || "User";
+        loadOrders(user.uid);
+        if (itemsContainer.children.length === 0) {
+          addItemRow();
+        }
+      } else {
+        userSection.classList.add("hidden");
+        loginBtn.classList.remove("hidden");
+        appContent.classList.add("hidden");
+        loggedOutView.classList.remove("hidden");
+        allOrders = [];
+      }
+    });
+
+    function addItemRow(itemName = "", customName = "", qty = "", rate = "", lineTotal = 0) {
+      const row = document.createElement("div");
+      row.className = "item-row flex flex-col gap-1.5 bg-slate-800/60 p-2.5 rounded-xl border border-white/5";
+
+      let isCustom = itemName === "অন্যান্য" || (itemName && !defaultItemsList.includes(itemName));
+      let selectedOption = isCustom ? "অন্যান্য" : itemName;
+
+      let optionsHtml = defaultItemsList.map(item => 
+        `<option value="${item}" ${item === selectedOption ? 'selected' : ''}>${item}</option>`
+      ).join("");
+
+      row.innerHTML = `
+        <div class="flex items-center gap-1.5">
+          <select class="item-select bg-slate-900 text-white text-xs px-2 py-1.5 rounded-lg border border-white/10 flex-1 outline-none">
+            <option value="">মালামাল নির্বাচন করুন</option>
+            ${optionsHtml}
+          </select>
+          <input type="number" placeholder="সংখ্যা" value="${qty}" min="1" class="item-qty w-16 glass-input text-white text-center text-xs py-1.5 rounded-lg outline-none">
+          <input type="number" placeholder="দাম (৳)" value="${rate}" min="0" class="item-rate w-20 glass-input text-white text-center text-xs py-1.5 rounded-lg outline-none">
+          <span class="item-total text-xs text-sky-400 font-semibold w-16 text-right">৳${lineTotal || 0}</span>
+          <button type="button" class="remove-item-btn text-rose-400 hover:text-rose-300 p-1 text-xs">
+            <i class="fa-solid fa-trash-can"></i>
+          </button>
+        </div>
+        <div class="custom-name-container ${selectedOption === 'অন্যান্য' ? '' : 'hidden'}">
+          <input type="text" placeholder="মালামালের নাম লিখুন..." value="${customName || (isCustom ? itemName : '')}" class="custom-item-name w-full glass-input text-white px-2.5 py-1 rounded-lg text-xs outline-none border border-sky-500/30">
+        </div>
+      `;
+
+      const qtyInput = row.querySelector(".item-qty");
+      const rateInput = row.querySelector(".item-rate");
+      const selectElem = row.querySelector(".item-select");
+      const totalSpan = row.querySelector(".item-total");
+      const removeBtn = row.querySelector(".remove-item-btn");
+      const customContainer = row.querySelector(".custom-name-container");
+      const customInput = row.querySelector(".custom-item-name");
+
+      selectElem.onchange = () => {
+        if (selectElem.value === "অন্যান্য") {
+          customContainer.classList.remove("hidden");
+          customInput.focus();
+        } else {
+          customContainer.classList.add("hidden");
+        }
+        updateLineTotal();
+      };
+
+      function updateLineTotal() {
+        const q = parseFloat(qtyInput.value) || 0;
+        const r = parseFloat(rateInput.value) || 0;
+        const t = q * r;
+        totalSpan.innerText = "৳" + t;
+        calculateGrandTotal();
+      }
+
+      qtyInput.oninput = updateLineTotal;
+      rateInput.oninput = updateLineTotal;
+
+      removeBtn.onclick = () => {
+        if (itemsContainer.children.length > 1) {
+          row.remove();
+          calculateGrandTotal();
+        } else {
+          showToast("কমপক্ষে একটি আইটেম থাকতে হবে!");
+        }
+      };
+
+      itemsContainer.appendChild(row);
+      updateLineTotal();
+    }
+
+    addItemBtn.onclick = () => addItemRow();
+
+    function calculateGrandTotal() {
+      let grandTotal = 0;
+      const rows = itemsContainer.querySelectorAll(".item-row");
+      rows.forEach(row => {
+        const q = parseFloat(row.querySelector(".item-qty").value) || 0;
+        const r = parseFloat(row.querySelector(".item-rate").value) || 0;
+        grandTotal += (q * r);
+      });
+
+      totalAmount.value = grandTotal;
+      calculateDue();
+    }
+
+    function calculateDue() {
+      const tot = parseFloat(totalAmount.value) || 0;
+      const pd = parseFloat(paidAmount.value) || 0;
+      dueAmount.value = Math.max(0, tot - pd);
+    }
+    paidAmount.oninput = calculateDue;
+
+    function getItemsData() {
+      const items = [];
+      const rows = itemsContainer.querySelectorAll(".item-row");
+      rows.forEach(row => {
+        const selectVal = row.querySelector(".item-select").value;
+        const customVal = row.querySelector(".custom-item-name").value.trim();
+        const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
+        const rate = parseFloat(row.querySelector(".item-rate").value) || 0;
+
+        let finalName = selectVal;
+        if (selectVal === "অন্যান্য") {
+          finalName = customVal || "অন্যান্য";
+        }
+
+        if (finalName && qty > 0) {
+          items.push({ 
+            name: finalName, 
+            isOther: selectVal === "অন্যান্য", 
+            qty, 
+            rate, 
+            total: qty * rate 
+          });
+        }
+      });
+      return items;
+    }
+
+    function showToast(msg) {
+      toastMsg.innerText = msg;
+      toast.classList.remove("translate-y-24", "opacity-0");
+      setTimeout(() => toast.classList.add("translate-y-24", "opacity-0"), 2200);
+    }
+
+    orderForm.onsubmit = async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+
+      const items = getItemsData();
+      if (items.length === 0) {
+        alert("অনুগ্রহ করে কমপক্ষে একটি মালামাল নির্বাচন করুন এবং সংখ্যা দিন!");
+        return;
+      }
+
+      const tot = parseFloat(totalAmount.value) || 0;
+      const pd = parseFloat(paidAmount.value) || 0;
+      const due = Math.max(0, tot - pd);
+      const editingId = editOrderId.value;
+
+      const orderData = {
+        uid: currentUser.uid,
+        custName: custName.value.trim(),
+        custPhone: custPhone.value.trim(),
+        eventDate: eventDate.value,
+        eventAddress: eventAddress.value.trim(),
+        items: items,
+        totalAmount: tot,
+        paidAmount: pd,
+        dueAmount: due,
+        isReturned: returnStatus.checked,
+        updatedAt: Date.now()
+      };
+
+      try {
+        if (editingId) {
+          await updateDoc(doc(db, "ekota_decoration_orders", editingId), orderData);
+          showToast("অর্ডার আপডেট করা হয়েছে!");
+        } else {
+          orderData.createdAt = Date.now();
+          await addDoc(collection(db, "ekota_decoration_orders"), orderData);
+          showToast("নতুন বুকিং যুক্ত হয়েছে!");
+        }
+        resetForm();
+      } catch (err) {
+        alert("ত্রুটি: " + err.message);
+      }
+    };
+
+    cancelEditBtn.onclick = resetForm;
+
+    function resetForm() {
+      editOrderId.value = "";
+      orderForm.reset();
+      itemsContainer.innerHTML = "";
+      addItemRow();
+      totalAmount.value = "";
+      dueAmount.value = "";
+      formTitle.innerText = "নতুন বুকিং এন্ট্রি";
+      submitBtnText.innerText = "সংরক্ষণ করুন";
+      cancelEditBtn.classList.add("hidden");
+    }
+
+    function loadOrders(uid) {
+      const q = query(collection(db, "ekota_decoration_orders"), where("uid", "==", uid));
+      onSnapshot(q, (snapshot) => {
+        allOrders = [];
+        snapshot.forEach((docSnap) => {
+          allOrders.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        renderOrders();
+      }, (err) => {
+        console.error(err);
+        ordersList.innerHTML = "<p class='text-rose-400 text-center text-sm py-4'>ডাটাবেজ লোড হচ্ছে না</p>";
+      });
+    }
+
+    searchInput.oninput = () => renderOrders();
+    filterStatus.onchange = () => renderOrders();
+
+    function renderOrders() {
+      const qText = searchInput.value.toLowerCase();
+      const filter = filterStatus.value;
+
+      let totalPaidSum = 0;
+      let totalDueSum = 0;
+
+      allOrders.forEach(o => {
+        totalPaidSum += (o.paidAmount || 0);
+        totalDueSum += (o.dueAmount || 0);
+      });
+
+      statTotalOrders.innerText = allOrders.length;
+      statTotalPaid.innerText = "৳" + totalPaidSum.toLocaleString('bn-BD');
+      statTotalDue.innerText = "৳" + totalDueSum.toLocaleString('bn-BD');
+
+      let filtered = allOrders.filter(o => {
+        const matchesSearch = 
+          (o.custName || "").toLowerCase().includes(qText) ||
+          (o.custPhone || "").includes(qText) ||
+          (o.eventAddress || "").toLowerCase().includes(qText);
+
+        if (!matchesSearch) return false;
+
+        if (filter === "due") return (o.dueAmount || 0) > 0;
+        if (filter === "paid") return (o.dueAmount || 0) === 0;
+        if (filter === "not_returned") return !o.isReturned;
+        return true;
+      });
+
+      filtered.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+      ordersList.innerHTML = "";
+
+      if (filtered.length === 0) {
+        ordersList.innerHTML = `
+          <div class="text-center py-10 text-slate-500">
+            <i class="fa-solid fa-box-open text-3xl mb-2 opacity-40"></i>
+            <p class="text-xs">কোনো অর্ডার পাওয়া যায়নি</p>
+          </div>
+        `;
+        return;
+      }
+
+      filtered.forEach((order) => {
+        const isPaid = (order.dueAmount || 0) === 0;
+        const card = document.createElement("div");
+        card.className = "glass-card p-4 rounded-3xl shadow-xl flex flex-col gap-2.5 border border-white/5";
+
+        let itemsRenderHtml = "";
+        if (Array.isArray(order.items)) {
+          itemsRenderHtml = order.items.map(it => 
+            `<div class="flex justify-between items-center text-xs text-slate-300 py-0.5 border-b border-white/5 last:border-none">
+              <span>• ${it.name} (${it.qty}টি × ৳${it.rate})</span>
+              <span class="font-semibold text-sky-300">৳${it.total}</span>
+            </div>`
+          ).join("");
+        } else if (order.itemsList) {
+          itemsRenderHtml = `<p class="text-xs text-slate-300">${order.itemsList}</p>`;
+        }
+
+        card.innerHTML = `
+          <div class="flex justify-between items-start gap-2">
+            <div>
+              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+                ${order.custName}
+                ${order.custPhone ? `<a href="tel:${order.custPhone}" class="text-sky-400 hover:text-sky-300 text-xs"><i class="fa-solid fa-phone"></i></a>` : ''}
+              </h3>
+              <p class="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
+                <span><i class="fa-regular fa-calendar text-sky-400"></i> ${order.eventDate || 'তারিখ নেই'}</span>
+                ${order.eventAddress ? `<span>• <i class="fa-solid fa-location-dot text-rose-400"></i> ${order.eventAddress}</span>` : ''}
+              </p>
+            </div>
+            
+            <div class="flex items-center gap-1.5">
+              ${isPaid 
+                ? '<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-semibold px-2 py-0.5 rounded-full">পরিশোধিত</span>'
+                : `<span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-semibold px-2 py-0.5 rounded-full">বাকি ৳${order.dueAmount}</span>`
+              }
+              <button onclick="window.toggleReturn('${order.id}', ${!order.isReturned})" class="text-[10px] font-semibold px-2 py-0.5 rounded-full border transition ${order.isReturned ? 'bg-sky-500/10 text-sky-300 border-sky-500/20' : 'bg-amber-500/10 text-amber-300 border-amber-500/20'}" title="ফেরত স্ট্যাটাস পরিবর্তন করুন">
+                ${order.isReturned ? '✓ ফেরত এসেছে' : '📦 ফেরত বাকি'}
+              </button>
+            </div>
+          </div>
+
+          <div class="bg-slate-900/60 p-2.5 rounded-2xl border border-white/5 space-y-1">
+            <span class="text-[10px] text-slate-500 block font-semibold mb-1">ভাড়া দেওয়া মালামাল:</span>
+            ${itemsRenderHtml}
+          </div>
+
+          <div class="flex justify-between items-center text-[11px] text-slate-400 pt-2 border-t border-white/5">
+            <div class="flex items-center gap-3">
+              <span>মোট: <b class="text-white">৳${order.totalAmount}</b></span>
+              <span>জমা: <b class="text-emerald-400">৳${order.paidAmount}</b></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="window.startEdit('${order.id}')" class="bg-slate-700/30 hover:bg-slate-700/60 text-slate-300 hover:text-sky-400 px-2.5 py-1 rounded-lg transition text-xs">
+                <i class="fa-regular fa-pen-to-square"></i> এডিট
+              </button>
+              <button onclick="window.deleteOrder('${order.id}')" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg transition text-xs">
+                <i class="fa-regular fa-trash-can"></i>
+              </button>
+            </div>
+          </div>
+        `;
+        ordersList.appendChild(card);
+      });
+    }
+
+    window.toggleReturn = async (id, status) => {
+      await updateDoc(doc(db, "ekota_decoration_orders", id), { isReturned: status });
+    };
+
+    window.startEdit = (id) => {
+      const order = allOrders.find(o => o.id === id);
+      if (!order) return;
+      editOrderId.value = order.id;
+      custName.value = order.custName || "";
+      custPhone.value = order.custPhone || "";
+      eventDate.value = order.eventDate || "";
+      eventAddress.value = order.eventAddress || "";
+      
+      itemsContainer.innerHTML = "";
+      if (Array.isArray(order.items) && order.items.length > 0) {
+        order.items.forEach(it => {
+          let isDefault = defaultItemsList.includes(it.name);
+          let sel = isDefault ? it.name : "অন্যান্য";
+          let customName = isDefault ? "" : it.name;
+          addItemRow(sel, customName, it.qty, it.rate, it.total);
+        });
+      } else {
+        addItemRow();
+      }
+
+      totalAmount.value = order.totalAmount || 0;
+      paidAmount.value = order.paidAmount || 0;
+      dueAmount.value = order.dueAmount || 0;
+      returnStatus.checked = !!order.isReturned;
+      
+      formTitle.innerText = "বুকিং তথ্য এডিট করুন";
+      submitBtnText.innerText = "আপডেট করুন";
+      cancelEditBtn.classList.remove("hidden");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
+    window.deleteOrder = async (id) => {
+      if (confirm("আপনি কি নিশ্চিত এই বুকিং রেকর্ডটি মুছে ফেলতে চান?")) {
+        await deleteDoc(doc(db, "ekota_decoration_orders", id));
+        showToast("রেকর্ড মুছে ফেলা হয়েছে!");
+      }
+    };
+  </script>
+</body>
+</html>
+/firebase-auth.js";
     import { getFirestore, collection, addDoc, updateDoc, query, where, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
