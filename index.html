@@ -8,54 +8,58 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     body { 
       font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; 
-      background: radial-gradient(circle at top right, #1e1b4b, #0f172a 45%, #030712 100%);
+      background: radial-gradient(circle at top left, #f0f7ff, #f8fafc 50%, #e2e8f0 100%);
       background-attachment: fixed;
+      color: #1e293b;
     }
-    .glass-card {
-      background: rgba(30, 41, 59, 0.65);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+    .light-glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 10px -2px rgba(15, 23, 42, 0.03);
     }
-    .glass-input {
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+    .light-input {
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      color: #0f172a;
+      transition: all 0.2s ease;
     }
-    .glass-input:focus {
-      border-color: #38bdf8;
-      box-shadow: 0 0 16px rgba(56, 189, 248, 0.25);
+    .light-input:focus {
+      border-color: #0284c7;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+      outline: none;
     }
     ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 10px; }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
   </style>
 </head>
-<body class="text-slate-100 min-h-screen p-3 sm:p-5 flex flex-col items-center pb-24 selection:bg-sky-500 selection:text-white">
+<body class="min-h-screen p-3 sm:p-5 flex flex-col items-center pb-24 selection:bg-sky-500 selection:text-white">
   <div class="w-full max-w-xl">
     <!-- Header -->
-    <header class="flex justify-between items-center py-4 px-2 mb-2">
+    <header class="flex justify-between items-center py-3.5 px-1 mb-2">
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 flex items-center justify-center text-xl shadow-lg shadow-sky-500/25">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-xl text-white shadow-lg shadow-sky-600/25">
           🎪
         </div>
         <div>
-          <h1 class="text-lg font-bold tracking-tight text-white flex items-center gap-2">
+          <h1 class="text-lg font-extrabold tracking-tight text-slate-800 flex items-center gap-2">
             একতা ক্লাব
-            <span class="text-[10px] uppercase font-bold tracking-wider bg-sky-500/20 text-sky-300 px-2 py-0.5 rounded-full border border-sky-500/30">ডেকোরেশন</span>
+            <span class="text-[10px] uppercase font-bold tracking-wider bg-sky-100 text-sky-700 px-2 py-0.5 rounded-full border border-sky-200">ডেকোরেশন</span>
           </h1>
-          <p class="text-[11px] text-slate-400 font-medium">ভাড়া, বুকিং ও বকেয়া হিসাব খাতা</p>
+          <p class="text-[11px] text-slate-500 font-medium">ভাড়া, বুকিং ও বকেয়া হিসাব খাতা</p>
         </div>
       </div>
       
-      <button id="loginBtn" class="bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-500 hover:to-indigo-500 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-lg shadow-sky-600/30 transition">লগইন</button>
+      <button id="loginBtn" class="bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-md shadow-sky-600/20 transition">লগইন</button>
       
-      <div id="userSection" class="hidden flex items-center gap-2.5 bg-slate-800/60 border border-white/5 py-1 px-2.5 rounded-2xl backdrop-blur-md">
-        <span id="userName" class="text-xs text-slate-300 font-medium max-w-[100px] truncate"></span>
-        <button id="logoutBtn" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 p-1.5 rounded-xl transition" title="লগআউট">
+      <div id="userSection" class="hidden flex items-center gap-2 bg-white/90 border border-slate-200 py-1.5 px-3 rounded-2xl shadow-sm">
+        <span id="userName" class="text-xs text-slate-700 font-semibold max-w-[100px] truncate"></span>
+        <button id="logoutBtn" class="bg-rose-50 hover:bg-rose-100 text-rose-600 p-1.5 rounded-xl transition" title="লগআউট">
           <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
         </button>
       </div>
@@ -65,124 +69,124 @@
     <main id="appContent" class="hidden space-y-4">
       <!-- Quick Summary Dashboard -->
       <div class="grid grid-cols-3 gap-2.5">
-        <div class="glass-card p-3 rounded-2xl border border-white/5 text-center">
-          <p class="text-[11px] text-slate-400 font-medium">মোট অর্ডার</p>
-          <h3 id="statTotalOrders" class="text-lg font-bold text-sky-400 mt-0.5">০</h3>
+        <div class="light-glass-card p-3 rounded-2xl text-center">
+          <p class="text-[11px] text-slate-500 font-medium">মোট অর্ডার</p>
+          <h3 id="statTotalOrders" class="text-xl font-extrabold text-sky-600 mt-0.5">০</h3>
         </div>
-        <div class="glass-card p-3 rounded-2xl border border-white/5 text-center">
-          <p class="text-[11px] text-emerald-400 font-medium">মোট জমা</p>
-          <h3 id="statTotalPaid" class="text-lg font-bold text-emerald-300 mt-0.5">৳০</h3>
+        <div class="light-glass-card p-3 rounded-2xl text-center">
+          <p class="text-[11px] text-emerald-600 font-medium">মোট জমা</p>
+          <h3 id="statTotalPaid" class="text-xl font-extrabold text-emerald-600 mt-0.5">৳০</h3>
         </div>
-        <div class="glass-card p-3 rounded-2xl border border-white/5 text-center">
-          <p class="text-[11px] text-rose-400 font-medium">মোট বাকি</p>
-          <h3 id="statTotalDue" class="text-lg font-bold text-rose-300 mt-0.5">৳০</h3>
+        <div class="light-glass-card p-3 rounded-2xl text-center">
+          <p class="text-[11px] text-rose-600 font-medium">মোট বাকি</p>
+          <h3 id="statTotalDue" class="text-xl font-extrabold text-rose-600 mt-0.5">৳০</h3>
         </div>
       </div>
 
       <!-- Add New Order Form -->
-      <form id="orderForm" class="glass-card p-4 rounded-3xl shadow-xl space-y-3">
-        <div class="flex justify-between items-center border-b border-white/5 pb-2">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-sky-300 flex items-center gap-1.5">
-            <i class="fa-solid fa-calendar-plus"></i> <span id="formTitle">নতুন বুকিং এন্ট্রি</span>
+      <form id="orderForm" class="light-glass-card p-4 rounded-3xl shadow-xl space-y-3.5">
+        <div class="flex justify-between items-center border-b border-slate-200 pb-2.5">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-sky-700 flex items-center gap-1.5">
+            <i class="fa-solid fa-calendar-plus text-sky-600"></i> <span id="formTitle">নতুন বুকিং এন্ট্রি</span>
           </h2>
-          <button type="button" id="cancelEditBtn" class="hidden text-xs text-slate-400 hover:text-white">বাতিল</button>
+          <button type="button" id="cancelEditBtn" class="hidden text-xs text-slate-500 hover:text-slate-800 font-medium">বাতিল</button>
         </div>
 
         <input type="hidden" id="editOrderId" value="">
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <input type="text" id="custName" placeholder="কাস্টমারের নাম *" required class="w-full glass-input text-white px-3 py-2 rounded-xl text-xs outline-none">
-          <input type="tel" id="custPhone" placeholder="মোবাইল নম্বর" class="w-full glass-input text-white px-3 py-2 rounded-xl text-xs outline-none">
+          <input type="text" id="custName" placeholder="কাস্টমারের নাম *" required class="w-full light-input px-3.5 py-2.5 rounded-xl text-xs placeholder:text-slate-400">
+          <input type="tel" id="custPhone" placeholder="মোবাইল নম্বর" class="w-full light-input px-3.5 py-2.5 rounded-xl text-xs placeholder:text-slate-400">
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
           <div>
-            <label class="text-[10px] text-slate-400 ml-1">অনুষ্ঠানের তারিখ</label>
-            <input type="date" id="eventDate" required class="w-full glass-input text-white px-3 py-2 rounded-xl text-xs outline-none cursor-pointer">
+            <label class="text-[11px] text-slate-500 font-medium ml-1">অনুষ্ঠানের তারিখ</label>
+            <input type="date" id="eventDate" required class="w-full light-input px-3 py-2 rounded-xl text-xs cursor-pointer text-slate-700 mt-0.5">
           </div>
           <div>
-            <label class="text-[10px] text-slate-400 ml-1">অনুষ্ঠানের ঠিকানা / স্থান</label>
-            <input type="text" id="eventAddress" placeholder="স্থান বা ঠিকানা" class="w-full glass-input text-white px-3 py-2 rounded-xl text-xs outline-none">
+            <label class="text-[11px] text-slate-500 font-medium ml-1">অনুষ্ঠানের ঠিকানা / স্থান</label>
+            <input type="text" id="eventAddress" placeholder="স্থান বা ঠিকানা" class="w-full light-input px-3.5 py-2 rounded-xl text-xs placeholder:text-slate-400 mt-0.5">
           </div>
         </div>
 
         <!-- Dynamic Items Dropdown Section -->
-        <div class="bg-slate-900/50 p-3 rounded-2xl border border-white/5 space-y-2.5">
+        <div class="bg-slate-50/90 p-3.5 rounded-2xl border border-slate-200/80 space-y-2.5">
           <div class="flex justify-between items-center">
-            <label class="text-[11px] font-semibold text-sky-300 flex items-center gap-1">
-              <i class="fa-solid fa-boxes-stacked"></i> মালামালের তালিকা, সংখ্যা ও দাম
+            <label class="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
+              <i class="fa-solid fa-boxes-stacked text-sky-600"></i> মালামালের তালিকা, সংখ্যা ও দাম
             </label>
-            <button type="button" id="addItemBtn" class="text-[11px] text-sky-400 hover:text-sky-300 bg-sky-500/10 px-2.5 py-1 rounded-lg border border-sky-500/20 font-medium transition flex items-center gap-1">
+            <button type="button" id="addItemBtn" class="text-[11px] text-sky-700 hover:text-sky-800 bg-sky-100 hover:bg-sky-200 px-3 py-1 rounded-lg border border-sky-200 font-semibold transition flex items-center gap-1 shadow-sm">
               <i class="fa-solid fa-plus text-[10px]"></i> আইটেম যোগ করুন
             </button>
           </div>
 
-          <div id="itemsContainer" class="space-y-2">
+          <div id="itemsContainer" class="space-y-2.5">
             <!-- Dynamic rows will appear here -->
           </div>
         </div>
 
         <!-- Calculation Row -->
-        <div class="grid grid-cols-3 gap-2 pt-1">
+        <div class="grid grid-cols-3 gap-2.5 pt-1">
           <div>
-            <label class="text-[10px] text-slate-400 ml-1">মোট বিল (৳)</label>
-            <input type="number" id="totalAmount" placeholder="0" readonly class="w-full glass-input text-sky-300 bg-slate-900/80 px-3 py-2 rounded-xl text-xs outline-none font-bold">
+            <label class="text-[10px] text-slate-500 font-bold ml-1 uppercase">মোট বিল (৳)</label>
+            <input type="number" id="totalAmount" placeholder="0" readonly class="w-full bg-sky-50 border border-sky-200 text-sky-800 px-3 py-2 rounded-xl text-xs font-bold mt-0.5">
           </div>
           <div>
-            <label class="text-[10px] text-emerald-400 ml-1">জমা / অগ্রিম (৳)</label>
-            <input type="number" id="paidAmount" placeholder="0" min="0" class="w-full glass-input text-white px-3 py-2 rounded-xl text-xs outline-none font-semibold">
+            <label class="text-[10px] text-emerald-700 font-bold ml-1 uppercase">জমা / অগ্রিম (৳)</label>
+            <input type="number" id="paidAmount" placeholder="0" min="0" class="w-full light-input border-emerald-300 text-emerald-700 px-3 py-2 rounded-xl text-xs font-bold mt-0.5">
           </div>
           <div>
-            <label class="text-[10px] text-rose-400 ml-1">বাকি (৳)</label>
-            <input type="number" id="dueAmount" placeholder="0" readonly class="w-full glass-input text-rose-300 bg-rose-500/10 px-3 py-2 rounded-xl text-xs outline-none font-bold">
+            <label class="text-[10px] text-rose-700 font-bold ml-1 uppercase">বাকি (৳)</label>
+            <input type="number" id="dueAmount" placeholder="0" readonly class="w-full bg-rose-50 border border-rose-200 text-rose-700 px-3 py-2 rounded-xl text-xs font-bold mt-0.5">
           </div>
         </div>
 
         <div class="flex items-center justify-between pt-2">
-          <label class="flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
-            <input type="checkbox" id="returnStatus" class="rounded text-sky-500 focus:ring-0">
+          <label class="flex items-center gap-2 text-xs font-medium text-slate-600 cursor-pointer">
+            <input type="checkbox" id="returnStatus" class="w-4 h-4 rounded text-sky-600 focus:ring-0 border-slate-300">
             <span>মালামাল ফেরত এসেছে</span>
           </label>
-          <button type="submit" id="submitBtn" class="bg-gradient-to-r from-sky-500 to-indigo-600 hover:opacity-95 text-white px-5 py-2 rounded-xl text-xs font-semibold shadow-md shadow-sky-600/30 transition flex items-center gap-1.5 active:scale-95">
+          <button type="submit" id="submitBtn" class="bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-sky-600/20 transition flex items-center gap-1.5 active:scale-95">
             <i class="fa-solid fa-floppy-disk"></i> <span id="submitBtnText">সংরক্ষণ করুন</span>
           </button>
         </div>
       </form>
 
       <!-- Search & Filter Row -->
-      <div class="flex gap-2">
+      <div class="flex gap-2 pt-1">
         <div class="relative flex-1">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
-          <input type="text" id="searchInput" placeholder="নাম, ফোন বা স্থান দিয়ে খুঁজুন..." class="w-full glass-input text-white pl-9 pr-3 py-2 rounded-2xl text-xs outline-none">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+          <input type="text" id="searchInput" placeholder="নাম, ফোন বা স্থান দিয়ে খুঁজুন..." class="w-full light-input pl-9 pr-3 py-2.5 rounded-2xl text-xs placeholder:text-slate-400 shadow-sm">
         </div>
         
-        <select id="filterStatus" class="glass-input rounded-2xl px-3 text-xs text-slate-300 outline-none cursor-pointer">
-          <option value="all" class="bg-slate-900">সব রেকর্ড</option>
-          <option value="due" class="bg-slate-900">বাকি আছে 🔴</option>
-          <option value="paid" class="bg-slate-900">পরিশোধিত 🟢</option>
-          <option value="not_returned" class="bg-slate-900">ফেরত বাকি 📦</option>
+        <select id="filterStatus" class="light-input rounded-2xl px-3 text-xs text-slate-700 font-medium cursor-pointer shadow-sm">
+          <option value="all">সব রেকর্ড</option>
+          <option value="due">বাকি আছে 🔴</option>
+          <option value="paid">পরিশোধিত 🟢</option>
+          <option value="not_returned">ফেরত বাকি 📦</option>
         </select>
       </div>
 
       <!-- Orders List -->
       <div id="ordersList" class="space-y-3 pt-1">
-        <p class="text-slate-500 text-center text-sm py-8">লোড হচ্ছে...</p>
+        <p class="text-slate-400 text-center text-sm py-8 font-medium">লোড হচ্ছে...</p>
       </div>
     </main>
 
     <!-- Signed Out View -->
-    <div id="loggedOutView" class="mt-20 text-center p-8 glass-card rounded-3xl shadow-2xl border border-white/10">
-      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center mx-auto text-3xl shadow-xl shadow-sky-500/20 mb-4">
+    <div id="loggedOutView" class="mt-20 text-center p-8 light-glass-card rounded-3xl shadow-xl border border-white">
+      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white flex items-center justify-center mx-auto text-3xl shadow-xl shadow-sky-500/20 mb-4">
         🎪
       </div>
-      <h2 class="text-lg font-bold text-white">একতা ক্লাব ডেকোরেশন হিসাব</h2>
-      <p class="text-xs text-slate-400 mt-1 max-w-xs mx-auto">মালামাল ভাড়া ও লেনদেনের হিসাব ক্লাউডে রাখতে গুগল অ্যাকাউন্ট দিয়ে লগইন করুন।</p>
+      <h2 class="text-lg font-bold text-slate-800">একতা ক্লাব ডেকোরেশন হিসাব</h2>
+      <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">মালামাল ভাড়া ও লেনদেনের হিসাব ক্লাউডে রাখতে গুগল অ্যাকাউন্ট দিয়ে লগইন করুন।</p>
     </div>
   </div>
 
-  <!-- Toast Message -->
-  <div id="toast" class="fixed bottom-6 bg-slate-800/90 backdrop-blur-xl text-white border border-white/10 px-4 py-2 rounded-2xl text-xs shadow-2xl transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none flex items-center gap-2">
-    <i class="fa-solid fa-circle-check text-sky-400"></i>
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed bottom-6 bg-slate-900 text-white px-4 py-2.5 rounded-2xl text-xs font-medium shadow-2xl transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none flex items-center gap-2">
+    <i class="fa-solid fa-circle-check text-emerald-400"></i>
     <span id="toastMsg">সফল হয়েছে!</span>
   </div>
 
@@ -286,7 +290,7 @@
 
     function addItemRow(itemName = "", customName = "", qty = "", rate = "", lineTotal = 0) {
       const row = document.createElement("div");
-      row.className = "item-row flex flex-col gap-1.5 bg-slate-800/60 p-2.5 rounded-xl border border-white/5";
+      row.className = "item-row flex flex-col gap-1.5 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm";
 
       let isCustom = itemName === "অন্যান্য" || (itemName && !defaultItemsList.includes(itemName));
       let selectedOption = isCustom ? "অন্যান্য" : itemName;
@@ -297,19 +301,19 @@
 
       row.innerHTML = `
         <div class="flex items-center gap-1.5">
-          <select class="item-select bg-slate-900 text-white text-xs px-2 py-1.5 rounded-lg border border-white/10 flex-1 outline-none">
+          <select class="item-select bg-slate-50 text-slate-800 text-xs px-2.5 py-2 rounded-lg border border-slate-300 flex-1 outline-none font-medium">
             <option value="">মালামাল নির্বাচন করুন</option>
             ${optionsHtml}
           </select>
-          <input type="number" placeholder="সংখ্যা" value="${qty}" min="1" class="item-qty w-16 glass-input text-white text-center text-xs py-1.5 rounded-lg outline-none">
-          <input type="number" placeholder="দাম (৳)" value="${rate}" min="0" class="item-rate w-20 glass-input text-white text-center text-xs py-1.5 rounded-lg outline-none">
-          <span class="item-total text-xs text-sky-400 font-semibold w-16 text-right">৳${lineTotal || 0}</span>
-          <button type="button" class="remove-item-btn text-rose-400 hover:text-rose-300 p-1 text-xs">
+          <input type="number" placeholder="সংখ্যা" value="${qty}" min="1" class="item-qty w-16 light-input text-center text-xs py-2 rounded-lg font-semibold">
+          <input type="number" placeholder="দাম (৳)" value="${rate}" min="0" class="item-rate w-20 light-input text-center text-xs py-2 rounded-lg font-semibold">
+          <span class="item-total text-xs text-sky-700 font-bold w-16 text-right">৳${lineTotal || 0}</span>
+          <button type="button" class="remove-item-btn text-rose-500 hover:text-rose-700 p-1.5 text-xs transition" title="মুছে ফেলুন">
             <i class="fa-solid fa-trash-can"></i>
           </button>
         </div>
         <div class="custom-name-container ${selectedOption === 'অন্যান্য' ? '' : 'hidden'}">
-          <input type="text" placeholder="মালামালের নাম লিখুন..." value="${customName || (isCustom ? itemName : '')}" class="custom-item-name w-full glass-input text-white px-2.5 py-1 rounded-lg text-xs outline-none border border-sky-500/30">
+          <input type="text" placeholder="অন্যান্য মালামালের নাম লিখুন..." value="${customName || (isCustom ? itemName : '')}" class="custom-item-name w-full light-input px-3 py-1.5 rounded-lg text-xs border border-sky-400">
         </div>
       `;
 
@@ -478,7 +482,7 @@
         renderOrders();
       }, (err) => {
         console.error(err);
-        ordersList.innerHTML = "<p class='text-rose-400 text-center text-sm py-4'>ডাটাবেজ লোড হচ্ছে না</p>";
+        ordersList.innerHTML = "<p class='text-rose-500 text-center text-sm py-4'>ডাটাবেজ লোড হচ্ছে না</p>";
       });
     }
 
@@ -520,8 +524,8 @@
 
       if (filtered.length === 0) {
         ordersList.innerHTML = `
-          <div class="text-center py-10 text-slate-500">
-            <i class="fa-solid fa-box-open text-3xl mb-2 opacity-40"></i>
+          <div class="text-center py-10 text-slate-400">
+            <i class="fa-solid fa-box-open text-3xl mb-2 opacity-50"></i>
             <p class="text-xs">কোনো অর্ডার পাওয়া যায়নি</p>
           </div>
         `;
@@ -531,59 +535,59 @@
       filtered.forEach((order) => {
         const isPaid = (order.dueAmount || 0) === 0;
         const card = document.createElement("div");
-        card.className = "glass-card p-4 rounded-3xl shadow-xl flex flex-col gap-2.5 border border-white/5";
+        card.className = "light-glass-card p-4 rounded-3xl flex flex-col gap-2.5 transition";
 
         let itemsRenderHtml = "";
         if (Array.isArray(order.items)) {
           itemsRenderHtml = order.items.map(it => 
-            `<div class="flex justify-between items-center text-xs text-slate-300 py-0.5 border-b border-white/5 last:border-none">
-              <span>• ${it.name} (${it.qty}টি × ৳${it.rate})</span>
-              <span class="font-semibold text-sky-300">৳${it.total}</span>
+            `<div class="flex justify-between items-center text-xs text-slate-700 py-1 border-b border-slate-100 last:border-none">
+              <span>• <b>${it.name}</b> (${it.qty}টি × ৳${it.rate})</span>
+              <span class="font-bold text-sky-700">৳${it.total}</span>
             </div>`
           ).join("");
         } else if (order.itemsList) {
-          itemsRenderHtml = `<p class="text-xs text-slate-300">${order.itemsList}</p>`;
+          itemsRenderHtml = `<p class="text-xs text-slate-700">${order.itemsList}</p>`;
         }
 
         card.innerHTML = `
           <div class="flex justify-between items-start gap-2">
             <div>
-              <h3 class="text-sm font-bold text-white flex items-center gap-2">
+              <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
                 ${order.custName}
-                ${order.custPhone ? `<a href="tel:${order.custPhone}" class="text-sky-400 hover:text-sky-300 text-xs"><i class="fa-solid fa-phone"></i></a>` : ''}
+                ${order.custPhone ? `<a href="tel:${order.custPhone}" class="text-sky-600 hover:text-sky-800 text-xs"><i class="fa-solid fa-phone"></i></a>` : ''}
               </h3>
-              <p class="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
-                <span><i class="fa-regular fa-calendar text-sky-400"></i> ${order.eventDate || 'তারিখ নেই'}</span>
-                ${order.eventAddress ? `<span>• <i class="fa-solid fa-location-dot text-rose-400"></i> ${order.eventAddress}</span>` : ''}
+              <p class="text-[11px] text-slate-500 flex items-center gap-2 mt-0.5">
+                <span><i class="fa-regular fa-calendar text-sky-600"></i> ${order.eventDate || 'তারিখ নেই'}</span>
+                ${order.eventAddress ? `<span>• <i class="fa-solid fa-location-dot text-rose-500"></i> ${order.eventAddress}</span>` : ''}
               </p>
             </div>
             
             <div class="flex items-center gap-1.5">
               ${isPaid 
-                ? '<span class="bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-[10px] font-semibold px-2 py-0.5 rounded-full">পরিশোধিত</span>'
-                : `<span class="bg-rose-500/10 text-rose-400 border border-rose-500/20 text-[10px] font-semibold px-2 py-0.5 rounded-full">বাকি ৳${order.dueAmount}</span>`
+                ? '<span class="bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full">পরিশোধিত</span>'
+                : `<span class="bg-rose-100 text-rose-700 border border-rose-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full">বাকি ৳${order.dueAmount}</span>`
               }
-              <button onclick="window.toggleReturn('${order.id}', ${!order.isReturned})" class="text-[10px] font-semibold px-2 py-0.5 rounded-full border transition ${order.isReturned ? 'bg-sky-500/10 text-sky-300 border-sky-500/20' : 'bg-amber-500/10 text-amber-300 border-amber-500/20'}" title="ফেরত স্ট্যাটাস পরিবর্তন করুন">
+              <button onclick="window.toggleReturn('${order.id}', ${!order.isReturned})" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full border transition ${order.isReturned ? 'bg-sky-100 text-sky-700 border-sky-200' : 'bg-amber-100 text-amber-800 border-amber-200'}" title="ফেরত স্ট্যাটাস পরিবর্তন করুন">
                 ${order.isReturned ? '✓ ফেরত এসেছে' : '📦 ফেরত বাকি'}
               </button>
             </div>
           </div>
 
-          <div class="bg-slate-900/60 p-2.5 rounded-2xl border border-white/5 space-y-1">
-            <span class="text-[10px] text-slate-500 block font-semibold mb-1">ভাড়া দেওয়া মালামাল:</span>
+          <div class="bg-slate-50/80 p-3 rounded-2xl border border-slate-200/70 space-y-1">
+            <span class="text-[10px] text-slate-500 block font-bold mb-1 uppercase tracking-wide">ভাড়া দেওয়া মালামাল:</span>
             ${itemsRenderHtml}
           </div>
 
-          <div class="flex justify-between items-center text-[11px] text-slate-400 pt-2 border-t border-white/5">
+          <div class="flex justify-between items-center text-[11px] text-slate-600 pt-2 border-t border-slate-100">
             <div class="flex items-center gap-3">
-              <span>মোট: <b class="text-white">৳${order.totalAmount}</b></span>
-              <span>জমা: <b class="text-emerald-400">৳${order.paidAmount}</b></span>
+              <span>মোট: <b class="text-slate-900">৳${order.totalAmount}</b></span>
+              <span>জমা: <b class="text-emerald-700">৳${order.paidAmount}</b></span>
             </div>
             <div class="flex items-center gap-2">
-              <button onclick="window.startEdit('${order.id}')" class="bg-slate-700/30 hover:bg-slate-700/60 text-slate-300 hover:text-sky-400 px-2.5 py-1 rounded-lg transition text-xs">
+              <button onclick="window.startEdit('${order.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-xl transition text-xs font-semibold shadow-sm">
                 <i class="fa-regular fa-pen-to-square"></i> এডিট
               </button>
-              <button onclick="window.deleteOrder('${order.id}')" class="bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg transition text-xs">
+              <button onclick="window.deleteOrder('${order.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-2.5 py-1 rounded-xl transition text-xs shadow-sm">
                 <i class="fa-regular fa-trash-can"></i>
               </button>
             </div>
