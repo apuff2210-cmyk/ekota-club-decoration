@@ -1,643 +1,200 @@
 <!DOCTYPE html>
-<html lang="bn">
+<html lang="bn" class="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>একতা ক্লাব ডেকোরেশন হিসাব</title>
+  <title>একতা ডেকোরেশন সার্ভিস - সামগ্রী ও রেট চার্ট</title>
+  <meta name="theme-color" content="#059669">
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = { darkMode: 'class' };
+  </script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- PDF ও ছবি ডাউনলোডের লাইব্রেরি -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
   <style>
-    body { 
-      font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; 
-      background: radial-gradient(circle at top left, #f0f7ff, #f8fafc 50%, #e2e8f0 100%);
-      background-attachment: fixed;
-      color: #1e293b;
+    body { font-family: 'Plus Jakarta Sans', 'Hind Siliguri', sans-serif; }
+    .light body { background: #f8fafc; color: #0f172a; }
+    .dark body { background: #090d16; color: #f8fafc; }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(226, 232, 240, 0.8);
     }
-    .light-glass-card {
-      background: rgba(255, 255, 255, 0.85);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.9);
-      box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 10px -2px rgba(15, 23, 42, 0.03);
+    .dark .glass-card {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .light-input {
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      color: #0f172a;
-      transition: all 0.2s ease;
-    }
-    .light-input:focus {
-      border-color: #0284c7;
-      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
-      outline: none;
-    }
-    ::-webkit-scrollbar { width: 5px; }
-    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
   </style>
 </head>
-<body class="min-h-screen p-3 sm:p-5 flex flex-col items-center pb-24 selection:bg-sky-500 selection:text-white">
-  <div class="w-full max-w-xl">
-    <!-- Header -->
-    <header class="flex justify-between items-center py-3.5 px-1 mb-2">
+<body class="min-h-screen p-3 sm:p-5 flex flex-col items-center pb-24">
+  <div class="w-full max-w-2xl space-y-4">
+    
+    <!-- হেডার বার -->
+    <header class="flex justify-between items-center py-2 px-1">
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-sky-600 to-indigo-600 flex items-center justify-center text-xl text-white shadow-lg shadow-sky-600/25">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-emerald-600 flex items-center justify-center text-white text-xl shadow-lg">
           🎪
         </div>
         <div>
-          <h1 class="text-lg font-extrabold tracking-tight text-slate-800 flex items-center gap-2">
-            একতা ক্লাব
-            <span class="text-[10px] uppercase font-bold tracking-wider bg-sky-100 text-sky-700 px-2 py-0.5 rounded-full border border-sky-200">ডেকোরেশন</span>
+          <h1 class="text-lg font-black text-slate-800 dark:text-slate-100 flex items-center gap-2">
+            একতা ডেকোরেশন
+            <span class="text-[10px] bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 px-2 py-0.5 rounded-full font-bold">অফিসিয়াল তালিকা</span>
           </h1>
-          <p class="text-[11px] text-slate-500 font-medium">ভাড়া, বুকিং ও বকেয়া হিসাব খাতা</p>
+          <p class="text-[11px] text-slate-500 font-medium">সামগ্রী তালিকা, দৈনিক ভাড়া ও স্টক রেজিস্টার</p>
         </div>
       </div>
-      
-      <button id="loginBtn" class="bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 text-white px-4 py-2 rounded-xl text-xs font-semibold shadow-md shadow-sky-600/20 transition">লগইন</button>
-      
-      <div id="userSection" class="hidden flex items-center gap-2 bg-white/90 border border-slate-200 py-1.5 px-3 rounded-2xl shadow-sm">
-        <span id="userName" class="text-xs text-slate-700 font-semibold max-w-[100px] truncate"></span>
-        <button id="logoutBtn" class="bg-rose-50 hover:bg-rose-100 text-rose-600 p-1.5 rounded-xl transition" title="লগআউট">
-          <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
-        </button>
-      </div>
+      <button id="themeBtn" class="w-9 h-9 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-slate-600 dark:text-amber-400 shadow-sm">
+        <i id="themeIcon" class="fa-solid fa-moon text-xs"></i>
+      </button>
     </header>
 
-    <!-- App Content Area -->
-    <main id="appContent" class="hidden space-y-4">
-      <!-- Quick Summary Dashboard -->
-      <div class="grid grid-cols-3 gap-2.5">
-        <div class="light-glass-card p-3 rounded-2xl text-center">
-          <p class="text-[11px] text-slate-500 font-medium">মোট অর্ডার</p>
-          <h3 id="statTotalOrders" class="text-xl font-extrabold text-sky-600 mt-0.5">০</h3>
-        </div>
-        <div class="light-glass-card p-3 rounded-2xl text-center">
-          <p class="text-[11px] text-emerald-600 font-medium">মোট জমা</p>
-          <h3 id="statTotalPaid" class="text-xl font-extrabold text-emerald-600 mt-0.5">৳০</h3>
-        </div>
-        <div class="light-glass-card p-3 rounded-2xl text-center">
-          <p class="text-[11px] text-rose-600 font-medium">মোট বাকি</p>
-          <h3 id="statTotalDue" class="text-xl font-extrabold text-rose-600 mt-0.5">৳০</h3>
-        </div>
+    <!-- ডাউনলোড ও কন্ট্রোল বাটন -->
+    <div class="flex flex-wrap items-center justify-between gap-2 bg-emerald-50 dark:bg-emerald-950/40 p-3 rounded-2xl border border-emerald-200 dark:border-emerald-800">
+      <div class="text-xs font-bold text-emerald-800 dark:text-emerald-300 flex items-center gap-1.5">
+        <i class="fa-solid fa-file-arrow-down"></i> তালিকা সংরক্ষণ করুন:
       </div>
-
-      <!-- Add New Order Form -->
-      <form id="orderForm" class="light-glass-card p-4 rounded-3xl shadow-xl space-y-3.5">
-        <div class="flex justify-between items-center border-b border-slate-200 pb-2.5">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-sky-700 flex items-center gap-1.5">
-            <i class="fa-solid fa-calendar-plus text-sky-600"></i> <span id="formTitle">নতুন বুকিং এন্ট্রি</span>
-          </h2>
-          <button type="button" id="cancelEditBtn" class="hidden text-xs text-slate-500 hover:text-slate-800 font-medium">বাতিল</button>
-        </div>
-
-        <input type="hidden" id="editOrderId" value="">
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <input type="text" id="custName" placeholder="কাস্টমারের নাম *" required class="w-full light-input px-3.5 py-2.5 rounded-xl text-xs placeholder:text-slate-400">
-          <input type="tel" id="custPhone" placeholder="মোবাইল নম্বর" class="w-full light-input px-3.5 py-2.5 rounded-xl text-xs placeholder:text-slate-400">
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <div>
-            <label class="text-[11px] text-slate-500 font-medium ml-1">অনুষ্ঠানের তারিখ</label>
-            <input type="date" id="eventDate" required class="w-full light-input px-3 py-2 rounded-xl text-xs cursor-pointer text-slate-700 mt-0.5">
-          </div>
-          <div>
-            <label class="text-[11px] text-slate-500 font-medium ml-1">অনুষ্ঠানের ঠিকানা / স্থান</label>
-            <input type="text" id="eventAddress" placeholder="স্থান বা ঠিকানা" class="w-full light-input px-3.5 py-2 rounded-xl text-xs placeholder:text-slate-400 mt-0.5">
-          </div>
-        </div>
-
-        <!-- Dynamic Items Dropdown Section -->
-        <div class="bg-slate-50/90 p-3.5 rounded-2xl border border-slate-200/80 space-y-2.5">
-          <div class="flex justify-between items-center">
-            <label class="text-[11px] font-bold text-slate-700 flex items-center gap-1.5">
-              <i class="fa-solid fa-boxes-stacked text-sky-600"></i> মালামালের তালিকা, সংখ্যা ও দাম
-            </label>
-            <button type="button" id="addItemBtn" class="text-[11px] text-sky-700 hover:text-sky-800 bg-sky-100 hover:bg-sky-200 px-3 py-1 rounded-lg border border-sky-200 font-semibold transition flex items-center gap-1 shadow-sm">
-              <i class="fa-solid fa-plus text-[10px]"></i> আইটেম যোগ করুন
-            </button>
-          </div>
-
-          <div id="itemsContainer" class="space-y-2.5">
-            <!-- Dynamic rows will appear here -->
-          </div>
-        </div>
-
-        <!-- Calculation Row -->
-        <div class="grid grid-cols-3 gap-2.5 pt-1">
-          <div>
-            <label class="text-[10px] text-slate-500 font-bold ml-1 uppercase">মোট বিল (৳)</label>
-            <input type="number" id="totalAmount" placeholder="0" readonly class="w-full bg-sky-50 border border-sky-200 text-sky-800 px-3 py-2 rounded-xl text-xs font-bold mt-0.5">
-          </div>
-          <div>
-            <label class="text-[10px] text-emerald-700 font-bold ml-1 uppercase">জমা / অগ্রিম (৳)</label>
-            <input type="number" id="paidAmount" placeholder="0" min="0" class="w-full light-input border-emerald-300 text-emerald-700 px-3 py-2 rounded-xl text-xs font-bold mt-0.5">
-          </div>
-          <div>
-            <label class="text-[10px] text-rose-700 font-bold ml-1 uppercase">বাকি (৳)</label>
-            <input type="number" id="dueAmount" placeholder="0" readonly class="w-full bg-rose-50 border border-rose-200 text-rose-700 px-3 py-2 rounded-xl text-xs font-bold mt-0.5">
-          </div>
-        </div>
-
-        <div class="flex items-center justify-between pt-2">
-          <label class="flex items-center gap-2 text-xs font-medium text-slate-600 cursor-pointer">
-            <input type="checkbox" id="returnStatus" class="w-4 h-4 rounded text-sky-600 focus:ring-0 border-slate-300">
-            <span>মালামাল ফেরত এসেছে</span>
-          </label>
-          <button type="submit" id="submitBtn" class="bg-gradient-to-r from-sky-600 to-indigo-600 hover:from-sky-700 hover:to-indigo-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold shadow-md shadow-sky-600/20 transition flex items-center gap-1.5 active:scale-95">
-            <i class="fa-solid fa-floppy-disk"></i> <span id="submitBtnText">সংরক্ষণ করুন</span>
-          </button>
-        </div>
-      </form>
-
-      <!-- Search & Filter Row -->
-      <div class="flex gap-2 pt-1">
-        <div class="relative flex-1">
-          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
-          <input type="text" id="searchInput" placeholder="নাম, ফোন বা স্থান দিয়ে খুঁজুন..." class="w-full light-input pl-9 pr-3 py-2.5 rounded-2xl text-xs placeholder:text-slate-400 shadow-sm">
-        </div>
-        
-        <select id="filterStatus" class="light-input rounded-2xl px-3 text-xs text-slate-700 font-medium cursor-pointer shadow-sm">
-          <option value="all">সব রেকর্ড</option>
-          <option value="due">বাকি আছে 🔴</option>
-          <option value="paid">পরিশোধিত 🟢</option>
-          <option value="not_returned">ফেরত বাকি 📦</option>
-        </select>
+      <div class="flex items-center gap-2">
+        <button id="downloadPdfBtn" class="bg-rose-600 hover:bg-rose-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm transition flex items-center gap-1 active:scale-95">
+          <i class="fa-solid fa-file-pdf"></i> PDF ডাউনলোড
+        </button>
+        <button id="downloadImageBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white px-3 py-1.5 rounded-xl text-xs font-bold shadow-sm transition flex items-center gap-1 active:scale-95">
+          <i class="fa-solid fa-image"></i> ছবি (PNG)
+        </button>
       </div>
-
-      <!-- Orders List -->
-      <div id="ordersList" class="space-y-3 pt-1">
-        <p class="text-slate-400 text-center text-sm py-8 font-medium">লোড হচ্ছে...</p>
-      </div>
-    </main>
-
-    <!-- Signed Out View -->
-    <div id="loggedOutView" class="mt-20 text-center p-8 light-glass-card rounded-3xl shadow-xl border border-white">
-      <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 text-white flex items-center justify-center mx-auto text-3xl shadow-xl shadow-sky-500/20 mb-4">
-        🎪
-      </div>
-      <h2 class="text-lg font-bold text-slate-800">একতা ক্লাব ডেকোরেশন হিসাব</h2>
-      <p class="text-xs text-slate-500 mt-1 max-w-xs mx-auto">মালামাল ভাড়া ও লেনদেনের হিসাব ক্লাউডে রাখতে গুগল অ্যাকাউন্ট দিয়ে লগইন করুন।</p>
     </div>
+
+    <!-- প্রিন্ট ও ডাউনলোডের মূল এরিয়া (অফিসিয়াল মেমো/রেট চার্ট স্টাইল) -->
+    <div id="printArea" class="glass-card p-5 sm:p-6 rounded-3xl shadow-md space-y-4 bg-white text-slate-800">
+      
+      <!-- অফিসিয়াল প্যাড হেডার -->
+      <div class="text-center border-b-2 border-emerald-600 pb-3 space-y-1">
+        <div class="flex items-center justify-center gap-2">
+          <span class="text-2xl">🎪</span>
+          <h2 class="text-xl font-black text-emerald-800 tracking-wide">একতা ডেকোরেশন সার্ভিস</h2>
+        </div>
+        <p class="text-xs text-slate-600 font-semibold">বিবাহ, সুন্নতে খৎনা, সভা-সেমিনার ও সকল সামাজিক অনুষ্ঠানের ডেকোরেশন ও সাউন্ড সরবরাহকারী</p>
+        <p class="text-[11px] text-slate-500 font-medium">📍 ক্লাব কার্যালয় সংলগ্ন | 📞 যোগাযোগ: ০১৮xxxxxxxx</p>
+      </div>
+
+      <!-- তালিকা টেবিল -->
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse text-xs">
+          <thead>
+            <tr class="bg-emerald-700 text-white text-[11px] uppercase tracking-wider">
+              <th class="p-2.5 rounded-l-xl text-center">নং</th>
+              <th class="p-2.5">সামগ্রীর বিবরণ</th>
+              <th class="p-2.5 text-center">মোট স্টক</th>
+              <th class="p-2.5 text-right rounded-r-xl">ভাড়া (প্রতি দিন)</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryTableBody" class="divide-y divide-slate-100 text-slate-700 font-medium">
+            <tr class="hover:bg-slate-50">
+              <td class="p-2.5 text-center font-bold text-slate-400">১</td>
+              <td class="p-2.5 font-bold text-slate-800">প্লাস্টিক ভিআইপি চেয়ার (সাদা/লাল)</td>
+              <td class="p-2.5 text-center font-semibold">৩০০ টি</td>
+              <td class="p-2.5 text-right font-bold text-emerald-700">১০ ৳ / টি</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-2.5 text-center font-bold text-slate-400">২</td>
+              <td class="p-2.5 font-bold text-slate-800">বড় খাবারের টেবিল (কাঠ ও কভারসহ)</td>
+              <td class="p-2.5 text-center font-semibold">২৫ টি</td>
+              <td class="p-2.5 text-right font-bold text-emerald-700">৮০ ৳ / টি</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-2.5 text-center font-bold text-slate-400">৩</td>
+              <td class="p-2.5 font-bold text-slate-800">রঙিন প্যান্ডেল ও সামিয়ানা সেট</td>
+              <td class="p-2.5 text-center font-semibold">৪ সেট</td>
+              <td class="p-2.5 text-right font-bold text-emerald-700">১,৫০০ ৳ / সেট</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-2.5 text-center font-bold text-slate-400">৪</td>
+              <td class="p-2.5 font-bold text-slate-800">ডিজিটাল সাউন্ড বক্স ও মাইক সেট</td>
+              <td class="p-2.5 text-center font-semibold">২ সেট</td>
+              <td class="p-2.5 text-right font-bold text-emerald-700">১,২০০ ৳ / সেট</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-2.5 text-center font-bold text-slate-400">৫</td>
+              <td class="p-2.5 font-bold text-slate-800">আলোকসজ্জা ও এলইডি লাইটিং গেট</td>
+              <td class="p-2.5 text-center font-semibold">৩ সেট</td>
+              <td class="p-2.5 text-right font-bold text-emerald-700">২,০০০ ৳ / গেট</td>
+            </tr>
+            <tr class="hover:bg-slate-50">
+              <td class="p-2.5 text-center font-bold text-slate-400">৬</td>
+              <td class="p-2.5 font-bold text-slate-800">বড় রান্নার ডেকচি ও কড়াই সেট</td>
+              <td class="p-2.5 text-center font-semibold">১০ টি</td>
+              <td class="p-2.5 text-right font-bold text-emerald-700">১৫০ ৳ / টি</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- নিয়মাবলী ও নোট -->
+      <div class="border-t border-slate-200 pt-3 text-[11px] text-slate-500 space-y-1">
+        <p class="font-bold text-slate-700">শর্তাবলী:</p>
+        <ul class="list-disc list-inside space-y-0.5">
+          <li>অনুষ্ঠানের ন্যূনতম ২ দিন আগে বুকিং নিশ্চিত করতে হবে।</li>
+          <li>কোনো মালামাল নষ্ট বা ভেঙে গেলে নির্ধারিত ক্ষতিপূরণ প্রযোজ্য হবে।</li>
+        </ul>
+      </div>
+
+      <!-- সিগনেচার এরিয়া -->
+      <div class="flex justify-between items-end pt-6 text-[11px] text-slate-600 font-bold border-t border-dashed border-slate-200">
+        <div class="text-center">
+          <p class="border-t border-slate-400 pt-1 w-24">গ্রাহক স্বাক্ষর</p>
+        </div>
+        <div class="text-center">
+          <p class="border-t border-slate-400 pt-1 w-28">পরিচালক / কোষাধ্যক্ষ</p>
+        </div>
+      </div>
+
+    </div>
+
   </div>
 
-  <!-- Toast Notification -->
-  <div id="toast" class="fixed bottom-6 bg-slate-900 text-white px-4 py-2.5 rounded-2xl text-xs font-medium shadow-2xl transition-all duration-300 transform translate-y-24 opacity-0 pointer-events-none flex items-center gap-2">
-    <i class="fa-solid fa-circle-check text-emerald-400"></i>
-    <span id="toastMsg">সফল হয়েছে!</span>
-  </div>
+  <script>
+    // ডার্ক ও লাইট মোড
+    const themeBtn = document.getElementById('themeBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    const html = document.documentElement;
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, addDoc, updateDoc, query, where, onSnapshot, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCJXc8miGg_6bAZCb_SpYfGelwzxhA3bpw",
-      authDomain: "apu-s-notes.firebaseapp.com",
-      projectId: "apu-s-notes",
-      storageBucket: "apu-s-notes.firebasestorage.app",
-      messagingSenderId: "469045356302",
-      appId: "1:469045356302:web:9db39c7df9564ca4c1995f",
-      measurementId: "G-T6ELLRKVM4"
+    themeBtn.onclick = () => {
+      const isDark = html.classList.toggle('dark');
+      html.classList.toggle('light', !isDark);
+      themeIcon.className = isDark ? 'fa-solid fa-sun text-xs' : 'fa-solid fa-moon text-xs';
     };
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const db = getFirestore(app);
-    const provider = new GoogleAuthProvider();
-
-    let currentUser = null;
-    let allOrders = [];
-
-    const defaultItemsList = [
-      "চেয়ার",
-      "টেবিল",
-      "বড় চামচ",
-      "ছোট চামচ",
-      "সামিয়ানা",
-      "প্লেট",
-      "বালতি",
-      "বাতি",
-      "কুন্তি",
-      "ডেসকি",
-      "গামলা",
-      "জগ",
-      "মগ",
-      "অন্যান্য"
-    ];
-
-    const loginBtn = document.getElementById("loginBtn");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const userSection = document.getElementById("userSection");
-    const userName = document.getElementById("userName");
-    const appContent = document.getElementById("appContent");
-    const loggedOutView = document.getElementById("loggedOutView");
-
-    const orderForm = document.getElementById("orderForm");
-    const editOrderId = document.getElementById("editOrderId");
-    const custName = document.getElementById("custName");
-    const custPhone = document.getElementById("custPhone");
-    const eventDate = document.getElementById("eventDate");
-    const eventAddress = document.getElementById("eventAddress");
-    const itemsContainer = document.getElementById("itemsContainer");
-    const addItemBtn = document.getElementById("addItemBtn");
-
-    const totalAmount = document.getElementById("totalAmount");
-    const paidAmount = document.getElementById("paidAmount");
-    const dueAmount = document.getElementById("dueAmount");
-    const returnStatus = document.getElementById("returnStatus");
-    const cancelEditBtn = document.getElementById("cancelEditBtn");
-    const submitBtnText = document.getElementById("submitBtnText");
-    const formTitle = document.getElementById("formTitle");
-
-    const ordersList = document.getElementById("ordersList");
-    const searchInput = document.getElementById("searchInput");
-    const filterStatus = document.getElementById("filterStatus");
-
-    const statTotalOrders = document.getElementById("statTotalOrders");
-    const statTotalPaid = document.getElementById("statTotalPaid");
-    const statTotalDue = document.getElementById("statTotalDue");
-    const toast = document.getElementById("toast");
-    const toastMsg = document.getElementById("toastMsg");
-
-    loginBtn.onclick = () => signInWithPopup(auth, provider).catch(err => alert("Login Error: " + err.message));
-    logoutBtn.onclick = () => signOut(auth);
-
-    onAuthStateChanged(auth, (user) => {
-      currentUser = user;
-      if (user) {
-        userSection.classList.remove("hidden");
-        loginBtn.classList.add("hidden");
-        appContent.classList.remove("hidden");
-        loggedOutView.classList.add("hidden");
-        userName.innerText = user.displayName || "User";
-        loadOrders(user.uid);
-        if (itemsContainer.children.length === 0) {
-          addItemRow();
-        }
-      } else {
-        userSection.classList.add("hidden");
-        loginBtn.classList.remove("hidden");
-        appContent.classList.add("hidden");
-        loggedOutView.classList.remove("hidden");
-        allOrders = [];
-      }
-    });
-
-    function addItemRow(itemName = "", customName = "", qty = "", rate = "", lineTotal = 0) {
-      const row = document.createElement("div");
-      row.className = "item-row flex flex-col gap-1.5 bg-white p-2.5 rounded-xl border border-slate-200 shadow-sm";
-
-      let isCustom = itemName === "অন্যান্য" || (itemName && !defaultItemsList.includes(itemName));
-      let selectedOption = isCustom ? "অন্যান্য" : itemName;
-
-      let optionsHtml = defaultItemsList.map(item => 
-        `<option value="${item}" ${item === selectedOption ? 'selected' : ''}>${item}</option>`
-      ).join("");
-
-      row.innerHTML = `
-        <div class="flex items-center gap-1.5">
-          <select class="item-select bg-slate-50 text-slate-800 text-xs px-2.5 py-2 rounded-lg border border-slate-300 flex-1 outline-none font-medium">
-            <option value="">মালামাল নির্বাচন করুন</option>
-            ${optionsHtml}
-          </select>
-          <input type="number" placeholder="সংখ্যা" value="${qty}" min="1" class="item-qty w-16 light-input text-center text-xs py-2 rounded-lg font-semibold">
-          <input type="number" placeholder="দাম (৳)" value="${rate}" min="0" class="item-rate w-20 light-input text-center text-xs py-2 rounded-lg font-semibold">
-          <span class="item-total text-xs text-sky-700 font-bold w-16 text-right">৳${lineTotal || 0}</span>
-          <button type="button" class="remove-item-btn text-rose-500 hover:text-rose-700 p-1.5 text-xs transition" title="মুছে ফেলুন">
-            <i class="fa-solid fa-trash-can"></i>
-          </button>
-        </div>
-        <div class="custom-name-container ${selectedOption === 'অন্যান্য' ? '' : 'hidden'}">
-          <input type="text" placeholder="অন্যান্য মালামালের নাম লিখুন..." value="${customName || (isCustom ? itemName : '')}" class="custom-item-name w-full light-input px-3 py-1.5 rounded-lg text-xs border border-sky-400">
-        </div>
-      `;
-
-      const qtyInput = row.querySelector(".item-qty");
-      const rateInput = row.querySelector(".item-rate");
-      const selectElem = row.querySelector(".item-select");
-      const totalSpan = row.querySelector(".item-total");
-      const removeBtn = row.querySelector(".remove-item-btn");
-      const customContainer = row.querySelector(".custom-name-container");
-      const customInput = row.querySelector(".custom-item-name");
-
-      selectElem.onchange = () => {
-        if (selectElem.value === "অন্যান্য") {
-          customContainer.classList.remove("hidden");
-          customInput.focus();
-        } else {
-          customContainer.classList.add("hidden");
-        }
-        updateLineTotal();
-      };
-
-      function updateLineTotal() {
-        const q = parseFloat(qtyInput.value) || 0;
-        const r = parseFloat(rateInput.value) || 0;
-        const t = q * r;
-        totalSpan.innerText = "৳" + t;
-        calculateGrandTotal();
-      }
-
-      qtyInput.oninput = updateLineTotal;
-      rateInput.oninput = updateLineTotal;
-
-      removeBtn.onclick = () => {
-        if (itemsContainer.children.length > 1) {
-          row.remove();
-          calculateGrandTotal();
-        } else {
-          showToast("কমপক্ষে একটি আইটেম থাকতে হবে!");
-        }
-      };
-
-      itemsContainer.appendChild(row);
-      updateLineTotal();
-    }
-
-    addItemBtn.onclick = () => addItemRow();
-
-    function calculateGrandTotal() {
-      let grandTotal = 0;
-      const rows = itemsContainer.querySelectorAll(".item-row");
-      rows.forEach(row => {
-        const q = parseFloat(row.querySelector(".item-qty").value) || 0;
-        const r = parseFloat(row.querySelector(".item-rate").value) || 0;
-        grandTotal += (q * r);
+    // ১. ছবি হিসেবে ডাউনলোড (PNG)
+    document.getElementById('downloadImageBtn').onclick = () => {
+      const element = document.getElementById('printArea');
+      html2canvas(element, { scale: 2 }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'Ekota-Decoration-List.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
       });
-
-      totalAmount.value = grandTotal;
-      calculateDue();
-    }
-
-    function calculateDue() {
-      const tot = parseFloat(totalAmount.value) || 0;
-      const pd = parseFloat(paidAmount.value) || 0;
-      dueAmount.value = Math.max(0, tot - pd);
-    }
-    paidAmount.oninput = calculateDue;
-
-    function getItemsData() {
-      const items = [];
-      const rows = itemsContainer.querySelectorAll(".item-row");
-      rows.forEach(row => {
-        const selectVal = row.querySelector(".item-select").value;
-        const customVal = row.querySelector(".custom-item-name").value.trim();
-        const qty = parseFloat(row.querySelector(".item-qty").value) || 0;
-        const rate = parseFloat(row.querySelector(".item-rate").value) || 0;
-
-        let finalName = selectVal;
-        if (selectVal === "অন্যান্য") {
-          finalName = customVal || "অন্যান্য";
-        }
-
-        if (finalName && qty > 0) {
-          items.push({ 
-            name: finalName, 
-            isOther: selectVal === "অন্যান্য", 
-            qty, 
-            rate, 
-            total: qty * rate 
-          });
-        }
-      });
-      return items;
-    }
-
-    function showToast(msg) {
-      toastMsg.innerText = msg;
-      toast.classList.remove("translate-y-24", "opacity-0");
-      setTimeout(() => toast.classList.add("translate-y-24", "opacity-0"), 2200);
-    }
-
-    orderForm.onsubmit = async (e) => {
-      e.preventDefault();
-      if (!currentUser) return;
-
-      const items = getItemsData();
-      if (items.length === 0) {
-        alert("অনুগ্রহ করে কমপক্ষে একটি মালামাল নির্বাচন করুন এবং সংখ্যা দিন!");
-        return;
-      }
-
-      const tot = parseFloat(totalAmount.value) || 0;
-      const pd = parseFloat(paidAmount.value) || 0;
-      const due = Math.max(0, tot - pd);
-      const editingId = editOrderId.value;
-
-      const orderData = {
-        uid: currentUser.uid,
-        custName: custName.value.trim(),
-        custPhone: custPhone.value.trim(),
-        eventDate: eventDate.value,
-        eventAddress: eventAddress.value.trim(),
-        items: items,
-        totalAmount: tot,
-        paidAmount: pd,
-        dueAmount: due,
-        isReturned: returnStatus.checked,
-        updatedAt: Date.now()
-      };
-
-      try {
-        if (editingId) {
-          await updateDoc(doc(db, "ekota_decoration_orders", editingId), orderData);
-          showToast("অর্ডার আপডেট করা হয়েছে!");
-        } else {
-          orderData.createdAt = Date.now();
-          await addDoc(collection(db, "ekota_decoration_orders"), orderData);
-          showToast("নতুন বুকিং যুক্ত হয়েছে!");
-        }
-        resetForm();
-      } catch (err) {
-        alert("ত্রুটি: " + err.message);
-      }
     };
 
-    cancelEditBtn.onclick = resetForm;
+    // ২. পিডিএফ হিসেবে ডাউনলোড (PDF)
+    document.getElementById('downloadPdfBtn').onclick = () => {
+      const element = document.getElementById('printArea');
+      html2canvas(element, { scale: 2 }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgProps = pdf.getImageProperties(imgData);
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-    function resetForm() {
-      editOrderId.value = "";
-      orderForm.reset();
-      itemsContainer.innerHTML = "";
-      addItemRow();
-      totalAmount.value = "";
-      dueAmount.value = "";
-      formTitle.innerText = "নতুন বুকিং এন্ট্রি";
-      submitBtnText.innerText = "সংরক্ষণ করুন";
-      cancelEditBtn.classList.add("hidden");
-    }
-
-    function loadOrders(uid) {
-      const q = query(collection(db, "ekota_decoration_orders"), where("uid", "==", uid));
-      onSnapshot(q, (snapshot) => {
-        allOrders = [];
-        snapshot.forEach((docSnap) => {
-          allOrders.push({ id: docSnap.id, ...docSnap.data() });
-        });
-        renderOrders();
-      }, (err) => {
-        console.error(err);
-        ordersList.innerHTML = "<p class='text-rose-500 text-center text-sm py-4'>ডাটাবেজ লোড হচ্ছে না</p>";
+        pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
+        pdf.save('Ekota-Decoration-List.pdf');
       });
-    }
-
-    searchInput.oninput = () => renderOrders();
-    filterStatus.onchange = () => renderOrders();
-
-    function renderOrders() {
-      const qText = searchInput.value.toLowerCase();
-      const filter = filterStatus.value;
-
-      let totalPaidSum = 0;
-      let totalDueSum = 0;
-
-      allOrders.forEach(o => {
-        totalPaidSum += (o.paidAmount || 0);
-        totalDueSum += (o.dueAmount || 0);
-      });
-
-      statTotalOrders.innerText = allOrders.length;
-      statTotalPaid.innerText = "৳" + totalPaidSum.toLocaleString('bn-BD');
-      statTotalDue.innerText = "৳" + totalDueSum.toLocaleString('bn-BD');
-
-      let filtered = allOrders.filter(o => {
-        const matchesSearch = 
-          (o.custName || "").toLowerCase().includes(qText) ||
-          (o.custPhone || "").includes(qText) ||
-          (o.eventAddress || "").toLowerCase().includes(qText);
-
-        if (!matchesSearch) return false;
-
-        if (filter === "due") return (o.dueAmount || 0) > 0;
-        if (filter === "paid") return (o.dueAmount || 0) === 0;
-        if (filter === "not_returned") return !o.isReturned;
-        return true;
-      });
-
-      filtered.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-      ordersList.innerHTML = "";
-
-      if (filtered.length === 0) {
-        ordersList.innerHTML = `
-          <div class="text-center py-10 text-slate-400">
-            <i class="fa-solid fa-box-open text-3xl mb-2 opacity-50"></i>
-            <p class="text-xs">কোনো অর্ডার পাওয়া যায়নি</p>
-          </div>
-        `;
-        return;
-      }
-
-      filtered.forEach((order) => {
-        const isPaid = (order.dueAmount || 0) === 0;
-        const card = document.createElement("div");
-        card.className = "light-glass-card p-4 rounded-3xl flex flex-col gap-2.5 transition";
-
-        let itemsRenderHtml = "";
-        if (Array.isArray(order.items)) {
-          itemsRenderHtml = order.items.map(it => 
-            `<div class="flex justify-between items-center text-xs text-slate-700 py-1 border-b border-slate-100 last:border-none">
-              <span>• <b>${it.name}</b> (${it.qty}টি × ৳${it.rate})</span>
-              <span class="font-bold text-sky-700">৳${it.total}</span>
-            </div>`
-          ).join("");
-        } else if (order.itemsList) {
-          itemsRenderHtml = `<p class="text-xs text-slate-700">${order.itemsList}</p>`;
-        }
-
-        card.innerHTML = `
-          <div class="flex justify-between items-start gap-2">
-            <div>
-              <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                ${order.custName}
-                ${order.custPhone ? `<a href="tel:${order.custPhone}" class="text-sky-600 hover:text-sky-800 text-xs"><i class="fa-solid fa-phone"></i></a>` : ''}
-              </h3>
-              <p class="text-[11px] text-slate-500 flex items-center gap-2 mt-0.5">
-                <span><i class="fa-regular fa-calendar text-sky-600"></i> ${order.eventDate || 'তারিখ নেই'}</span>
-                ${order.eventAddress ? `<span>• <i class="fa-solid fa-location-dot text-rose-500"></i> ${order.eventAddress}</span>` : ''}
-              </p>
-            </div>
-            
-            <div class="flex items-center gap-1.5">
-              ${isPaid 
-                ? '<span class="bg-emerald-100 text-emerald-800 border border-emerald-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full">পরিশোধিত</span>'
-                : `<span class="bg-rose-100 text-rose-700 border border-rose-200 text-[10px] font-bold px-2.5 py-0.5 rounded-full">বাকি ৳${order.dueAmount}</span>`
-              }
-              <button onclick="window.toggleReturn('${order.id}', ${!order.isReturned})" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full border transition ${order.isReturned ? 'bg-sky-100 text-sky-700 border-sky-200' : 'bg-amber-100 text-amber-800 border-amber-200'}" title="ফেরত স্ট্যাটাস পরিবর্তন করুন">
-                ${order.isReturned ? '✓ ফেরত এসেছে' : '📦 ফেরত বাকি'}
-              </button>
-            </div>
-          </div>
-
-          <div class="bg-slate-50/80 p-3 rounded-2xl border border-slate-200/70 space-y-1">
-            <span class="text-[10px] text-slate-500 block font-bold mb-1 uppercase tracking-wide">ভাড়া দেওয়া মালামাল:</span>
-            ${itemsRenderHtml}
-          </div>
-
-          <div class="flex justify-between items-center text-[11px] text-slate-600 pt-2 border-t border-slate-100">
-            <div class="flex items-center gap-3">
-              <span>মোট: <b class="text-slate-900">৳${order.totalAmount}</b></span>
-              <span>জমা: <b class="text-emerald-700">৳${order.paidAmount}</b></span>
-            </div>
-            <div class="flex items-center gap-2">
-              <button onclick="window.startEdit('${order.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-1 rounded-xl transition text-xs font-semibold shadow-sm">
-                <i class="fa-regular fa-pen-to-square"></i> এডিট
-              </button>
-              <button onclick="window.deleteOrder('${order.id}')" class="bg-rose-50 hover:bg-rose-100 text-rose-600 px-2.5 py-1 rounded-xl transition text-xs shadow-sm">
-                <i class="fa-regular fa-trash-can"></i>
-              </button>
-            </div>
-          </div>
-        `;
-        ordersList.appendChild(card);
-      });
-    }
-
-    window.toggleReturn = async (id, status) => {
-      await updateDoc(doc(db, "ekota_decoration_orders", id), { isReturned: status });
-    };
-
-    window.startEdit = (id) => {
-      const order = allOrders.find(o => o.id === id);
-      if (!order) return;
-      editOrderId.value = order.id;
-      custName.value = order.custName || "";
-      custPhone.value = order.custPhone || "";
-      eventDate.value = order.eventDate || "";
-      eventAddress.value = order.eventAddress || "";
-      
-      itemsContainer.innerHTML = "";
-      if (Array.isArray(order.items) && order.items.length > 0) {
-        order.items.forEach(it => {
-          let isDefault = defaultItemsList.includes(it.name);
-          let sel = isDefault ? it.name : "অন্যান্য";
-          let customName = isDefault ? "" : it.name;
-          addItemRow(sel, customName, it.qty, it.rate, it.total);
-        });
-      } else {
-        addItemRow();
-      }
-
-      totalAmount.value = order.totalAmount || 0;
-      paidAmount.value = order.paidAmount || 0;
-      dueAmount.value = order.dueAmount || 0;
-      returnStatus.checked = !!order.isReturned;
-      
-      formTitle.innerText = "বুকিং তথ্য এডিট করুন";
-      submitBtnText.innerText = "আপডেট করুন";
-      cancelEditBtn.classList.remove("hidden");
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    window.deleteOrder = async (id) => {
-      if (confirm("আপনি কি নিশ্চিত এই বুকিং রেকর্ডটি মুছে ফেলতে চান?")) {
-        await deleteDoc(doc(db, "ekota_decoration_orders", id));
-        showToast("রেকর্ড মুছে ফেলা হয়েছে!");
-      }
     };
   </script>
 </body>
