@@ -22,10 +22,10 @@
       color: #1e293b;
     }
     .light-glass-card {
-      background: rgba(255, 255, 255, 0.85);
+      background: rgba(255, 255, 255, 0.88);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.95);
       box-shadow: 0 10px 30px -5px rgba(15, 23, 42, 0.05), 0 4px 10px -2px rgba(15, 23, 42, 0.03);
     }
     .light-input {
@@ -189,87 +189,92 @@
     </div>
   </div>
 
-  <!-- প্রফেশনাল মেমো / রশিদ পপআপ মডাল (PDF & Image Download) -->
+  <!-- প্রফেশনাল মেমো / রশিদ পপআপ মডাল (HD PDF & PNG Export) -->
   <div id="memoModal" class="fixed inset-0 bg-slate-950/75 backdrop-blur-sm z-50 flex items-center justify-center p-3 hidden">
-    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl p-4 sm:p-5 space-y-3.5 max-h-[95vh] overflow-y-auto">
+    <div class="bg-white rounded-3xl max-w-md w-full shadow-2xl p-4 sm:p-5 space-y-3 max-h-[96vh] overflow-y-auto">
       
-      <!-- মডাল কন্ট্রোল বাটন -->
       <div class="flex justify-between items-center border-b border-slate-100 pb-2">
         <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-          <i class="fa-solid fa-file-invoice text-sky-600"></i> বুকিং মেমো ও রশিদ
+          <i class="fa-solid fa-file-invoice text-sky-600"></i> বুকিং মেমো ও অফিসিয়াল রশিদ
         </span>
         <button id="closeMemoBtn" class="w-7 h-7 rounded-full bg-slate-100 text-slate-500 hover:bg-rose-100 hover:text-rose-600 flex items-center justify-center text-xs font-bold">✕</button>
       </div>
 
-      <!-- প্রিন্ট ও ডাউনলোডের মূল এরিয়া -->
-      <div id="memoPrintArea" class="bg-white p-4 rounded-2xl border border-slate-200 text-slate-800 space-y-3 text-xs">
+      <!-- প্রিন্ট ও ডাউনলোডের মূল এরিয়া (প্রিমিয়াম ক্যাশ মেমো ফরম্যাট) -->
+      <div id="memoPrintArea" class="bg-white p-5 rounded-2xl border-2 border-sky-600/30 text-slate-800 space-y-3.5 shadow-sm">
         
         <!-- মেমো হেডার -->
-        <div class="text-center border-b-2 border-sky-600 pb-2.5 space-y-0.5">
-          <div class="flex items-center justify-center gap-1.5">
-            <span class="text-xl">🎪</span>
-            <h2 class="text-base font-black text-sky-800">একতা ক্লাব ডেকোরেশন</h2>
+        <div class="text-center border-b-2 border-sky-600 pb-3 space-y-0.5">
+          <div class="flex items-center justify-center gap-2">
+            <span class="text-2xl">🎪</span>
+            <h2 class="text-lg font-black text-sky-900 tracking-wide">একতা ক্লাব ডেকোরেশন</h2>
           </div>
-          <p class="text-[10px] text-slate-500">বুকিং ভাউচার ও সামগ্রী সরবরাহের রশিদ</p>
-          <p class="text-[9px] text-slate-400">📞 যোগাযোগ: ০১৮xxxxxxxx | 📍 ক্লাব কার্যালয়</p>
+          <p class="text-[11px] text-slate-600 font-medium">ভাড়া সামগ্রী সরবরাহ ও বুকিং ক্যাশ মেমো</p>
+          <p class="text-[10px] text-slate-500">📞 যোগাযোগ: ০১৮xxxxxxxx | 📍 ক্লাব কার্যালয়</p>
         </div>
 
         <!-- কাস্টমার ও ইভেন্ট তথ্য -->
-        <div class="grid grid-cols-2 gap-2 text-[11px] bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-          <div>
-            <p><span class="text-slate-400">নাম:</span> <b id="memoCustName" class="text-slate-800"></b></p>
-            <p><span class="text-slate-400">ফোন:</span> <span id="memoCustPhone" class="font-semibold"></span></p>
+        <div class="grid grid-cols-2 gap-2 text-xs bg-sky-50/70 p-3 rounded-xl border border-sky-100">
+          <div class="space-y-1">
+            <p><span class="text-slate-500 font-medium">কাস্টমার:</span> <b id="memoCustName" class="text-slate-900 font-bold"></b></p>
+            <p><span class="text-slate-500 font-medium">মোবাইল:</span> <span id="memoCustPhone" class="font-bold text-sky-800"></span></p>
           </div>
-          <div class="text-right">
-            <p><span class="text-slate-400">তারিখ:</span> <b id="memoEventDate" class="text-slate-800"></b></p>
-            <p><span class="text-slate-400">স্থান:</span> <span id="memoEventAddress"></span></p>
+          <div class="text-right space-y-1">
+            <p><span class="text-slate-500 font-medium">তারিখ:</span> <b id="memoEventDate" class="text-slate-900 font-bold"></b></p>
+            <p><span class="text-slate-500 font-medium">স্থান:</span> <span id="memoEventAddress" class="font-semibold text-slate-700"></span></p>
           </div>
         </div>
 
-        <!-- সামগ্রীর টেবিল -->
-        <table class="w-full text-left border-collapse text-[11px]">
-          <thead>
-            <tr class="bg-sky-50 text-sky-800 border-b border-sky-100">
-              <th class="py-1.5 px-2">বিবরণ</th>
-              <th class="py-1.5 px-2 text-center">সংখ্যা</th>
-              <th class="py-1.5 px-2 text-right">দর</th>
-              <th class="py-1.5 px-2 text-right">মোট</th>
-            </tr>
-          </thead>
-          <tbody id="memoItemsTbody" class="divide-y divide-slate-100">
-            <!-- ডাইনামিক রো বসবে -->
-          </tbody>
-        </table>
+        <!-- সামগ্রীর প্রফেশনাল টেবিল (মাঝখানে বড় সংখ্যা) -->
+        <div class="overflow-hidden rounded-xl border border-slate-200">
+          <table class="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr class="bg-sky-600 text-white font-bold text-[11px]">
+                <th class="py-2 px-2.5">মালামালের বিবরণ</th>
+                <th class="py-2 px-2 text-center w-20">সংখ্যা</th>
+                <th class="py-2 px-2 text-right w-16">দর (৳)</th>
+                <th class="py-2 px-2.5 text-right w-20">মোট (৳)</th>
+              </tr>
+            </thead>
+            <tbody id="memoItemsTbody" class="divide-y divide-slate-100">
+              <!-- Dynamic Rows -->
+            </tbody>
+          </table>
+        </div>
 
         <!-- হিসাব সামারি -->
-        <div class="border-t border-slate-200 pt-2 space-y-1 text-[11px]">
-          <div class="flex justify-between">
-            <span>সর্বমোট বিল:</span>
-            <b id="memoTotalAmount" class="text-slate-800">৳০</b>
+        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5 text-xs">
+          <div class="flex justify-between items-center text-slate-700">
+            <span class="font-medium">সর্বমোট বিল:</span>
+            <b id="memoTotalAmount" class="text-slate-900 text-sm">৳০</b>
           </div>
-          <div class="flex justify-between text-emerald-700">
-            <span>জমা / অগ্রিম:</span>
-            <b id="memoPaidAmount">৳০</b>
+          <div class="flex justify-between items-center text-emerald-700 font-semibold">
+            <span>জমা / পরিশোধ:</span>
+            <span id="memoPaidAmount" class="text-sm">৳০</span>
           </div>
-          <div class="flex justify-between text-rose-600 font-bold border-t border-dashed border-slate-200 pt-1">
+          <div class="flex justify-between items-center text-rose-600 font-extrabold border-t border-dashed border-slate-300 pt-1.5">
             <span>অবশিষ্ট বকেয়া:</span>
-            <span id="memoDueAmount">৳০</span>
+            <span id="memoDueAmount" class="text-sm">৳০</span>
           </div>
         </div>
 
         <!-- স্বাক্ষর -->
-        <div class="flex justify-between items-end pt-5 text-[9px] text-slate-400">
-          <span>গ্রাহকের স্বাক্ষর</span>
-          <span>দায়িত্বপ্রাপ্ত স্বাক্ষর</span>
+        <div class="flex justify-between items-end pt-6 text-[10px] text-slate-500 font-semibold border-t border-slate-200">
+          <div class="text-center">
+            <p class="border-t border-slate-400 pt-1 w-24">গ্রাহকের স্বাক্ষর</p>
+          </div>
+          <div class="text-center">
+            <p class="border-t border-slate-400 pt-1 w-28">দায়িত্বপ্রাপ্ত স্বাক্ষর</p>
+          </div>
         </div>
       </div>
 
-      <!-- ডাউনলোড বাটনসমূহ -->
+      <!-- ডাউনলোড অপশনসমূহ -->
       <div class="grid grid-cols-2 gap-2 pt-1">
-        <button id="downloadPdfBtn" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
+        <button id="downloadPdfBtn" class="bg-rose-600 hover:bg-rose-700 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
           <i class="fa-solid fa-file-pdf"></i> PDF ডাউনলোড
         </button>
-        <button id="downloadImageBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
+        <button id="downloadImageBtn" class="bg-sky-600 hover:bg-sky-700 text-white font-bold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 shadow-md active:scale-95 transition">
           <i class="fa-solid fa-image"></i> ছবি (PNG)
         </button>
       </div>
@@ -320,6 +325,7 @@
       "গামলা",
       "জগ",
       "মগ",
+      "ড্রাম",
       "অন্যান্য"
     ];
 
@@ -630,12 +636,20 @@
         const card = document.createElement("div");
         card.className = "light-glass-card p-4 rounded-3xl flex flex-col gap-2.5 transition";
 
+        // মালামালের তালিকা (মাঝখানে বড় সংখ্যা সহ সাজানো)
         let itemsRenderHtml = "";
         if (Array.isArray(order.items)) {
           itemsRenderHtml = order.items.map(it => 
-            `<div class="flex justify-between items-center text-xs text-slate-700 py-1 border-b border-slate-100 last:border-none">
-              <span>• <b>${it.name}</b> (${it.qty}টি × ৳${it.rate})</span>
-              <span class="font-bold text-sky-700">৳${it.total}</span>
+            `<div class="flex items-center justify-between py-1.5 px-2 rounded-xl bg-white/70 border border-slate-100 text-xs">
+              <span class="font-bold text-slate-800 flex items-center gap-1.5 flex-1 truncate">
+                <span class="text-sky-500 font-black">•</span> ${it.name}
+              </span>
+              <span class="bg-sky-50 text-sky-800 border border-sky-200/80 px-2.5 py-0.5 rounded-lg font-black text-xs text-center mx-2">
+                ${it.qty} টি
+              </span>
+              <span class="font-extrabold text-slate-700 w-16 text-right">
+                ৳${it.total}
+              </span>
             </div>`
           ).join("");
         } else if (order.itemsList) {
@@ -645,11 +659,11 @@
         card.innerHTML = `
           <div class="flex justify-between items-start gap-2">
             <div>
-              <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+              <h3 class="text-sm font-extrabold text-slate-800 flex items-center gap-2">
                 ${order.custName}
                 ${order.custPhone ? `<a href="tel:${order.custPhone}" class="text-sky-600 hover:text-sky-800 text-xs"><i class="fa-solid fa-phone"></i></a>` : ''}
               </h3>
-              <p class="text-[11px] text-slate-500 flex items-center gap-2 mt-0.5">
+              <p class="text-[11px] text-slate-500 flex items-center gap-2 mt-0.5 font-medium">
                 <span><i class="fa-regular fa-calendar text-sky-600"></i> ${order.eventDate || 'তারিখ নেই'}</span>
                 ${order.eventAddress ? `<span>• <i class="fa-solid fa-location-dot text-rose-500"></i> ${order.eventAddress}</span>` : ''}
               </p>
@@ -666,19 +680,22 @@
             </div>
           </div>
 
-          <div class="bg-slate-50/80 p-3 rounded-2xl border border-slate-200/70 space-y-1">
-            <span class="text-[10px] text-slate-500 block font-bold mb-1 uppercase tracking-wide">ভাড়া দেওয়া মালামাল:</span>
+          <div class="bg-slate-50/80 p-2.5 rounded-2xl border border-slate-200/70 space-y-1.5">
+            <div class="flex justify-between items-center text-[10px] text-slate-400 font-bold uppercase tracking-wider px-1">
+              <span>মালামাল</span>
+              <span class="text-center">পরিমাণ</span>
+              <span class="text-right">মোট টাকা</span>
+            </div>
             ${itemsRenderHtml}
           </div>
 
           <div class="flex justify-between items-center text-[11px] text-slate-600 pt-2 border-t border-slate-100">
             <div class="flex items-center gap-3">
-              <span>মোট: <b class="text-slate-900">৳${order.totalAmount}</b></span>
-              <span>জমা: <b class="text-emerald-700">৳${order.paidAmount}</b></span>
+              <span>মোট: <b class="text-slate-900 font-bold">৳${order.totalAmount}</b></span>
+              <span>জমা: <b class="text-emerald-700 font-bold">৳${order.paidAmount}</b></span>
             </div>
             <div class="flex items-center gap-1.5">
-              <!-- মেমো বাটন -->
-              <button onclick="window.openMemo('${order.id}')" class="bg-sky-50 hover:bg-sky-100 text-sky-700 px-2.5 py-1 rounded-xl transition text-xs font-semibold border border-sky-200 shadow-sm flex items-center gap-1">
+              <button onclick="window.openMemo('${order.id}')" class="bg-sky-50 hover:bg-sky-100 text-sky-700 px-2.5 py-1 rounded-xl transition text-xs font-bold border border-sky-200 shadow-sm flex items-center gap-1">
                 <i class="fa-solid fa-file-invoice"></i> রশিদ / লিস্ট
               </button>
               <button onclick="window.startEdit('${order.id}')" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-2.5 py-1 rounded-xl transition text-xs font-semibold shadow-sm">
@@ -695,7 +712,7 @@
     }
 
     // ============================================
-    // প্রফেশনাল মেমো পপআপ, PDF ও ছবি ডাউনলোড লজিক
+    // প্রফেশনাল মেমো পপআপ, HD PDF ও ছবি ডাউনলোড
     // ============================================
     const memoModal = document.getElementById("memoModal");
     const closeMemoBtn = document.getElementById("closeMemoBtn");
@@ -725,11 +742,15 @@
       if (Array.isArray(order.items)) {
         order.items.forEach(it => {
           memoItemsTbody.innerHTML += `
-            <tr class="hover:bg-slate-50">
-              <td class="py-1.5 px-2 font-medium">${it.name}</td>
-              <td class="py-1.5 px-2 text-center font-bold">${it.qty}</td>
-              <td class="py-1.5 px-2 text-right">৳${it.rate}</td>
-              <td class="py-1.5 px-2 text-right font-bold text-sky-700">৳${it.total}</td>
+            <tr class="hover:bg-slate-50 text-xs">
+              <td class="py-2 px-2.5 font-bold text-slate-800">${it.name}</td>
+              <td class="py-2 px-2 text-center">
+                <span class="bg-sky-50 text-sky-800 border border-sky-200 font-black px-2 py-0.5 rounded-md text-[11px] inline-block">
+                  ${it.qty} টি
+                </span>
+              </td>
+              <td class="py-2 px-2 text-right font-medium text-slate-600">৳${it.rate}</td>
+              <td class="py-2 px-2.5 text-right font-black text-sky-800">৳${it.total}</td>
             </tr>
           `;
         });
@@ -744,10 +765,14 @@
 
     closeMemoBtn.onclick = () => memoModal.classList.add("hidden");
 
-    // ১. ছবি হিসেবে ডাউনলোড (PNG)
+    // ১. ছবি হিসেবে ডাউনলোড (PNG - HD 3X Scale)
     downloadImageBtn.onclick = () => {
       const element = document.getElementById("memoPrintArea");
-      html2canvas(element, { scale: 2 }).then(canvas => {
+      html2canvas(element, { 
+        scale: 3, 
+        useCORS: true, 
+        backgroundColor: "#ffffff" 
+      }).then(canvas => {
         const link = document.createElement("a");
         const filename = activeMemoOrder ? `${activeMemoOrder.custName}-memo.png` : 'decoration-memo.png';
         link.download = filename;
@@ -756,18 +781,24 @@
       });
     };
 
-    // ২. PDF হিসেবে ডাউনলোড
+    // ২. PDF হিসেবে ডাউনলোড (A4 Paper Print Format)
     downloadPdfBtn.onclick = () => {
       const element = document.getElementById("memoPrintArea");
-      html2canvas(element, { scale: 2 }).then(canvas => {
+      html2canvas(element, { 
+        scale: 3, 
+        useCORS: true, 
+        backgroundColor: "#ffffff" 
+      }).then(canvas => {
         const imgData = canvas.toDataURL("image/png");
         const { jsPDF } = window.jspdf;
         const pdf = new jsPDF('p', 'mm', 'a4');
-        const imgProps = pdf.getImageProperties(imgData);
         const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+        const imgProps = pdf.getImageProperties(imgData);
+        const margin = 15;
+        const printWidth = pdfWidth - (margin * 2);
+        const printHeight = (imgProps.height * printWidth) / imgProps.width;
 
-        pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
+        pdf.addImage(imgData, 'PNG', margin, 15, printWidth, printHeight);
         const filename = activeMemoOrder ? `${activeMemoOrder.custName}-memo.pdf` : 'decoration-memo.pdf';
         pdf.save(filename);
       });
